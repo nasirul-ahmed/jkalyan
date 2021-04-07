@@ -25,7 +25,6 @@ class DashBoard extends StatelessWidget {
                 AuthServices(FirebaseAuth.instance).signOut();
               },
               child: Row(
-                //mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(Icons.person),
                   SizedBox(
@@ -59,85 +58,85 @@ class DashBoard extends StatelessWidget {
     );
   }
 
-  Widget collectionContainer(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            width: MediaQuery.of(context).size.height / 2,
-            height: 150,
-            //height: MediaQuery.of(context).size.width / 2,
+//   Widget collectionContainer(BuildContext context) {
+//     return Row(
+//       children: [
+//         Expanded(
+//           child: Container(
+//             width: MediaQuery.of(context).size.height / 2 ,
+//             height: 150,
+//             //height: MediaQuery.of(context).size.width / 2,
 
-            child: Card(
-              elevation: 16,
-              color: Colors.yellow[800],
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Daily Deposit Collection',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      '00.0',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            width: MediaQuery.of(context).size.height / 2,
-            height: 150,
-            //height: MediaQuery.of(context).size.width / 2,
-            child: Card(
-              elevation: 16,
-              color: Colors.yellow[800],
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Daily Loan Collection',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      '00.0',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
+//             child: Card(
+//               elevation: 16,
+//               color: Colors.yellow[800],
+//               child: Center(
+//                 child: Column(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     Text(
+//                       'Daily Deposit Collection',
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 14,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     SizedBox(
+//                       height: 5,
+//                     ),
+//                     Text(
+//                       '00.0',
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//         Expanded(
+//           child: Container(
+//             width: MediaQuery.of(context).size.height / 2,
+//             height: 150,
+//             //height: MediaQuery.of(context).size.width / 2,
+//             child: Card(
+//               elevation: 16,
+//               color: Colors.yellow[800],
+//               child: Center(
+//                 child: Column(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     Text(
+//                       'Daily Loan Collection',
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 14,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     SizedBox(
+//                       height: 5,
+//                     ),
+//                     Text(
+//                       '00.0',
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         )
+//       ],
+//     );
+//   }
 }

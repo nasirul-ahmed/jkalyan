@@ -62,7 +62,8 @@ Future<Customer> createCustomer(
   );
 
   if (response.statusCode >= 200 && response.statusCode < 404) {
-    print('success added');
+    print('success added' + response.body.toString());
+
     return Customer.fromJson(jsonDecode(response.body));
   } else {
     print(response.statusCode);

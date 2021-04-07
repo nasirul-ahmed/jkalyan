@@ -44,11 +44,11 @@ class _AllCustomersState extends State<AllCustomers> {
             style: TextStyle(fontSize: 20.0),
           ),
           subtitle: Text(
-            'A/c: ${doc.accountNumber}',
+            'A/c: ${doc.accountNumber.toString()}',
             style: TextStyle(fontSize: 16),
           ),
           trailing: Container(
-            child: Text('₹ ${doc.totalPrincipalAmount}'),
+            child: Text('₹ ${doc.totalPrincipalAmount.toString()}'),
           ),
         ),
       );
@@ -63,7 +63,7 @@ class _AllCustomersState extends State<AllCustomers> {
         child: FutureBuilder<List<Customer>>(
           future: getCustomer(),
           builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
+            if (snapshot.hasError) return Text(snapshot.error.toString());
 
             return snapshot.hasData
                 ? ListView.builder(

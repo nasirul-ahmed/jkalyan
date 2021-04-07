@@ -1,4 +1,6 @@
 import 'package:devbynasirulahmed/screen/add_customer/addDepositCustomer.dart';
+import 'package:devbynasirulahmed/screen/edit_customer/edit_customer.dart';
+import 'package:devbynasirulahmed/screen/upload/upload_profile.dart';
 import 'package:devbynasirulahmed/widgets/all_customers.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +17,7 @@ Widget mobileViewDashboard(BuildContext context) {
                 //height: MediaQuery.of(context).size.width / 2,
 
                 child: Card(
-                  elevation: 16,
+                  elevation: 8,
                   color: Colors.pink[500],
                   child: Center(
                     child: Column(
@@ -26,7 +28,7 @@ Widget mobileViewDashboard(BuildContext context) {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 1,
                           ),
                         ),
@@ -47,13 +49,16 @@ Widget mobileViewDashboard(BuildContext context) {
                 ),
               ),
             ),
+            SizedBox(
+              width: 5,
+            ),
             Expanded(
               child: Container(
                 width: MediaQuery.of(context).size.height / 2,
                 height: 150,
                 //height: MediaQuery.of(context).size.width / 2,
                 child: Card(
-                  elevation: 16,
+                  elevation: 8,
                   color: Colors.pink[500],
                   child: Center(
                     child: Column(
@@ -90,42 +95,40 @@ Widget mobileViewDashboard(BuildContext context) {
         SizedBox(
           height: 10,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AllCustomers()));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.orange[800],
-                borderRadius: BorderRadius.circular(6),
-              ),
-              height: 60,
-              //color: Colors.orange[700],
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.grading_outlined,
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AllCustomers()));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.orange[800],
+              borderRadius: BorderRadius.circular(6),
+            ),
+            height: 60,
+            width: MediaQuery.of(context).size.width - 20,
+            //color: Colors.orange[700],
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.grading_outlined,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    'All Customer',
+                    style: TextStyle(
                       color: Colors.white,
-                      size: 35,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Text(
-                      'All Customer',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -135,88 +138,92 @@ Widget mobileViewDashboard(BuildContext context) {
         ),
         Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddDepositCustomer()));
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.green[700],
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  height: 60,
-                  width: MediaQuery.of(context).size.width / 2 - 16,
-                  //color: Colors.pink[900],
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 35,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          'Add Customer',
-                          style: TextStyle(
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 5),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddDepositCustomer()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.green[700],
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    height: 60,
+                    //width: MediaQuery.of(context).size.width / 2 - 16,
+                    //color: Colors.pink[900],
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add,
                             color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                            size: 25,
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'Add Customer',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-            SizedBox(
-              width: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: GestureDetector(
-                // onTap: () {
-                //   Navigator.pushNamed(context, Home.id);
-                // },
-
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 2 - 16,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.orange[800],
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  //color: Colors.pink[900],
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 35,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          'Edit Customer',
-                          style: TextStyle(
+            // SizedBox(
+            //   width: 10,
+            // ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5, right: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EditCustomer()));
+                  },
+                  child: Container(
+                    // width: MediaQuery.of(context).size.width / 2 - 16,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.orange[800],
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    //color: Colors.pink[900],
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.edit,
                             color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                            size: 22,
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'Edit Customer',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -224,6 +231,14 @@ Widget mobileViewDashboard(BuildContext context) {
             ),
           ],
         ),
+        // MaterialButton(
+        //   onPressed: () {
+        //     Navigator.of(context).push(
+        //         MaterialPageRoute(builder: (context) => UploadProfile(9503)));
+        //   },
+        //   child: Text('upload image'),
+        // )
+        Text('customer ac no: '),
       ],
     ),
   );

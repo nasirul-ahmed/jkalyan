@@ -13,7 +13,7 @@ class Login extends StatelessWidget {
   Future<dynamic> handlePress(BuildContext context) async {
     await AuthServices(FirebaseAuth.instance)
         .signIn(email: _email.text, password: _password.text);
-    debugPrint(FirebaseAuth.instance.currentUser!.uid);
+    debugPrint(FirebaseAuth.instance.currentUser?.uid);
   }
 
   @override

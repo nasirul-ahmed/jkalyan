@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final firbaseUser = context.watch<User?>();
+    //final firbaseUser = context.watch<User?>();
     return Drawer(
       child: Container(
         //decoration: BoxDecoration(color: Colors.blue[200]),
@@ -15,10 +15,11 @@ class CustomDrawer extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               child: UserAccountsDrawerHeader(
-                accountEmail: Text(
-                  firbaseUser == null ? '' : '${firbaseUser.email}',
-                  style: TextStyle(fontSize: 18),
-                ),
+                accountEmail: Text('test@gmail.com'),
+                // accountEmail: Text(
+                //   firbaseUser == null ? '' : '${firbaseUser.email}',
+                //   style: TextStyle(fontSize: 18),
+                // ),
                 accountName: Text('Manager', style: TextStyle(fontSize: 20)),
                 margin: EdgeInsets.zero,
                 //padding: EdgeInsets.fromLTRB(0.0, 16.0, 150, 16.0),

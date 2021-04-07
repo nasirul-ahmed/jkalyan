@@ -29,6 +29,8 @@ class _AddCustomerDVState extends State<AddCustomerDV> {
   String agentUid = 'agent 1';
   String accountType = '';
   String? maturityDate = '';
+  String createdAt = '';
+  DateTime? mDate;
 
   String? dob = '';
   @override
@@ -213,6 +215,14 @@ class _AddCustomerDVState extends State<AddCustomerDV> {
                   //debugPrint(nomineeName.text);
                   // print(totalPrincipalAmount.toString());
                   if (_key.currentState!.validate()) {
+                    DateTime creationDate = DateTime.now();
+                    setState(() {
+                      createdAt =
+                          "${creationDate.year}-${creationDate.month}-${creationDate.day}";
+                      mDate = DateTime(creationDate.year,
+                          creationDate.month + 21, creationDate.day);
+                    });
+                    print(mDate.toString());
                     var random = new Random();
                     int accountNumber = random.nextInt(9000) + 999;
 
@@ -224,9 +234,6 @@ class _AddCustomerDVState extends State<AddCustomerDV> {
                     double totalMaturityAmount =
                         totalPrincipalAmount + totalInterestAmount;
 
-                    DateTime creationDate = DateTime.now();
-                    String createdAt =
-                        "${creationDate.year}-${creationDate.month}-${creationDate.day}";
                     print(createdAt);
 
                     Navigator.push(

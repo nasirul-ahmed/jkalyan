@@ -33,7 +33,9 @@ class Customer {
       this.createdAt,
       this.phone,
       this.dob,
-      this.accountType});
+      this.accountType,
+      this.profile,
+      this.signature});
 
   int? id;
   int? accountNumber;
@@ -52,13 +54,15 @@ class Customer {
   int? installmentAmount;
   String? maturityDate;
   int? totalPrincipalAmount;
-  double? totalInterestAmount;
-  double? totalMaturityAmount;
+  int? totalInterestAmount;
+  int? totalMaturityAmount;
   String? agentUid;
   String? createdAt;
   int? phone;
   String? dob;
   String? accountType;
+  String? profile;
+  String? signature;
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         id: json["id"],
@@ -85,6 +89,8 @@ class Customer {
         phone: json["phone"],
         dob: json["dob"],
         accountType: json["accountType"],
+        profile: json["profile"],
+        signature: json["signature"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -112,5 +118,7 @@ class Customer {
         "phone": phone,
         "dob": dob,
         "accountType": accountType,
+        "profile": profile,
+        "signature": signature
       };
 }
