@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget EditableDetailsMobile(String keyField, var value) {
   return Container(
-    padding: EdgeInsets.only(left: 10, right: 10),
+    padding: EdgeInsets.only(left: 5, right: 5),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -17,7 +17,7 @@ Widget EditableDetailsMobile(String keyField, var value) {
                 child: Center(
                   child: Text(
                     keyField,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -32,7 +32,7 @@ Widget EditableDetailsMobile(String keyField, var value) {
                 child: Center(
                   child: Text(
                     '$value',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

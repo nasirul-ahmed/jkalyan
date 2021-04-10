@@ -36,17 +36,20 @@ class _EditCustomerState extends State<EditCustomer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        body: Builder(builder: (_) {
-          if (isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (_apiResponse!.err!) {
-            return Center(child: Text("${_apiResponse?.errorMsg}"));
-          }
+      appBar: AppBar(),
+      body: Builder(builder: (_) {
+        if (isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (_apiResponse!.err!) {
           return Center(
-            child: Text('ac no: ${_apiResponse?.data?.accountNumber}'),
+            child: Text("${_apiResponse?.errorMsg}"),
           );
-        }));
+        }
+        return Center(
+          child: Text('ac no: ${_apiResponse?.data?.accountNumber}'),
+        );
+      }),
+    );
   }
 }

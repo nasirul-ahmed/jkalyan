@@ -41,7 +41,6 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
 
   String? dob = '';
 
-  int nextAccountNumber = 1;
   bool isLoading = false;
 
   Future<Customer?> getAccountNo() async {
@@ -311,7 +310,6 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                             MaterialPageRoute(
                               builder: (context) => ReviewMobile(
                                 name.text,
-                                accountNumber,
                                 fatherName.text,
                                 address.text,
                                 int.parse(pinCode.text),

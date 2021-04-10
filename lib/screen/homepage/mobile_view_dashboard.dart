@@ -238,7 +238,7 @@ Widget mobileViewDashboard(BuildContext context) {
         //   },
         //   child: Text('upload image'),
         // )
-        Text('customer ac no: '),
+        //Text('customer ac no: '),
       ],
     ),
   );
