@@ -1,8 +1,25 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:devbynasirulahmed/models/api_response.dart';
+import 'package:devbynasirulahmed/screen/upload/reupload.dart';
+import 'package:devbynasirulahmed/services/collector/collector.services.dart';
+import 'package:devbynasirulahmed/services/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:devbynasirulahmed/models/api_response.dart';
+import 'package:devbynasirulahmed/models/collector.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  Future<ApiResponse<Collector>> _getCollector;
+  @override
+  void initState() {
+    super.initState();
+    _getCollector = getCollector();
+  }
+
   @override
   Widget build(BuildContext context) {
     //final firbaseUser = context.watch<User?>();
@@ -15,7 +32,13 @@ class CustomDrawer extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               child: UserAccountsDrawerHeader(
-                accountEmail: Text('test@gmail.com'),
+                accountEmail:
+                    FuturBuilder<ApiResponse<Collector>>(builder: (_, snap) {
+                  if (snap.hasError) {
+                    return Text('error');
+                  }
+                  return Text('${snap.data?.data?.email}');
+                }),
                 // accountEmail: Text(
                 //   firbaseUser == null ? '' : '${firbaseUser.email}',
                 //   style: TextStyle(fontSize: 18),
@@ -60,9 +83,32 @@ class CustomDrawer extends StatelessWidget {
               color: Colors.white,
             ),
             Container(
+              decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
+                leading: Icon(
+                  Icons.upload_file,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                title: Text(
+                  'Upload',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
                 onTap: () {
-                  FirebaseAuth.instance.signOut();
+                  // Update the state of the app.
+                  // ...
+                  Navigator.pushNamed(context, ReUploadProfile.id);
+                },
+              ),
+            ),
+            Divider(
+              height: 1,
+              color: Colors.white,
+            ),
+            Container(
+              child: ListTile(
+                onTap: () async {
+                  Provider.of<AuthNotifier>(context, listen: false).logOut();
                 },
                 title: Text(
                   'Log Out',
