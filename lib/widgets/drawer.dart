@@ -1,11 +1,14 @@
 import 'package:devbynasirulahmed/models/api_response.dart';
+import 'package:devbynasirulahmed/screen/transafer_amount/deposit/deposit_transfer_view.dart';
 import 'package:devbynasirulahmed/screen/upload/reupload.dart';
 import 'package:devbynasirulahmed/services/collector/collector.services.dart';
 import 'package:devbynasirulahmed/services/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:devbynasirulahmed/models/api_response.dart';
 import 'package:devbynasirulahmed/models/collector.dart';
+import 'package:progress_indicators/progress_indicators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -13,86 +16,78 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  Future<ApiResponse<Collector>> _getCollector;
+  // late Future<ApiResponse<Collector>> _getCollector;
+
+  String? email;
+  String? name;
+
+  getEmail() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = _prefs.getString("email");
+      name = _prefs.getString("name");
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _getCollector = getCollector();
+    //_getCollector = getCollector();
+    getEmail();
   }
 
   @override
   Widget build(BuildContext context) {
-    //final firbaseUser = context.watch<User?>();
     return Drawer(
       child: Container(
-        //decoration: BoxDecoration(color: Colors.blue[200]),
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: <Widget>[
             GestureDetector(
               child: UserAccountsDrawerHeader(
-                accountEmail:
-                    FuturBuilder<ApiResponse<Collector>>(builder: (_, snap) {
-                  if (snap.hasError) {
-                    return Text('error');
-                  }
-                  return Text('${snap.data?.data?.email}');
-                }),
-                // accountEmail: Text(
-                //   firbaseUser == null ? '' : '${firbaseUser.email}',
-                //   style: TextStyle(fontSize: 18),
-                // ),
-                accountName: Text('Manager', style: TextStyle(fontSize: 20)),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.orange[700],
+                  child: Icon(Icons.person, color: Colors.white),
+                ),
+                accountEmail: Text(email ?? ''),
+                accountName: Text('$name', style: TextStyle(fontSize: 20)),
                 margin: EdgeInsets.zero,
-                //padding: EdgeInsets.fromLTRB(0.0, 16.0, 150, 16.0),
-                // currentAccountPicture: Image(
-                //   //radius: 30.0,
-                //   image: AssetImage('images/appstore.png'),
-                // ),
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey[600],
+                  color: Colors.green,
                   //shape: BoxShape.circle,
                 ),
               ),
-            ),
-            Divider(
-              height: 1,
-              color: Colors.white,
             ),
             Container(
               decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
                 leading: Icon(
                   Icons.pending_actions,
-                  color: Colors.black,
-                  size: 30,
+                  color: Colors.green,
+                  size: 20,
                 ),
                 title: Text(
-                  'Agent Deposits',
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  'Deposits History',
+                  style: TextStyle(fontSize: 18, color: Colors.black),
                 ),
                 onTap: () {
                   // Update the state of the app.
                   // ...
+                  Navigator.pushNamed(context, DepositTransferView.id);
                 },
               ),
-            ),
-            Divider(
-              height: 1,
-              color: Colors.white,
             ),
             Container(
               decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
                 leading: Icon(
-                  Icons.upload_file,
-                  color: Colors.black,
-                  size: 30,
+                  Icons.person_outline,
+                  color: Colors.green,
+                  size: 20,
                 ),
                 title: Text(
-                  'Upload',
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  'Customers',
+                  style: TextStyle(fontSize: 18, color: Colors.black),
                 ),
                 onTap: () {
                   // Update the state of the app.
@@ -101,9 +96,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 },
               ),
             ),
-            Divider(
-              height: 1,
-              color: Colors.white,
+            Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: ListTile(
+                leading: Icon(
+                  Icons.upload_file,
+                  color: Colors.green,
+                  size: 20,
+                ),
+                title: Text(
+                  'Upload',
+                  style: TextStyle(fontSize: 18, color: Colors.black),
+                ),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                  Navigator.pushNamed(context, ReUploadProfile.id);
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20),
+              child: Divider(
+                height: 1,
+                color: Colors.black,
+              ),
             ),
             Container(
               child: ListTile(
@@ -113,7 +130,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 title: Text(
                   'Log Out',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.red,
+                    letterSpacing: 1.2,
+                  ),
                 ),
               ),
             ),
@@ -121,7 +142,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
               child: Text(
                 '@devbyNasirul',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey[400]),
+                style: TextStyle(
+                  color: Colors.grey[400],
+                ),
               ),
             ),
           ],

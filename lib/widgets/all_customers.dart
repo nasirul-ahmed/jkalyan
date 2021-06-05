@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/services/customer_service.dart';
 import 'package:devbynasirulahmed/widgets/max_width_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AllCustomers extends StatefulWidget {
   @override
@@ -15,8 +18,21 @@ class _AllCustomersState extends State<AllCustomers> {
     final url =
         Uri.parse('https://sanchay-new.herokuapp.com/api/agents/customers');
 
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String? token = _prefs.getString('token');
+    //"Authorization": "Bearer $token"
+    var body = jsonEncode({
+      "id": _prefs.getInt('id'),
+    });
     try {
-      var res = await http.get(url, headers: {"Accept": "application/json"});
+      var res = await http.post(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: body,
+      );
       if (200 == res.statusCode) {
         return compute(parseCustomer, res.body);
       }
@@ -48,7 +64,7 @@ class _AllCustomersState extends State<AllCustomers> {
             style: TextStyle(fontSize: 16),
           ),
           trailing: Container(
-            child: Text('₹ ${doc.totalPrincipalAmount.toString()}'),
+            child: Text('₹ ${doc.payableAmount.toString()}'),
           ),
         ),
       );

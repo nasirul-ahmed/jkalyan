@@ -1,18 +1,148 @@
-import 'package:devbynasirulahmed/screen/homepage/desktop_view_dashboard.dart';
+import 'dart:convert';
 import 'package:devbynasirulahmed/screen/homepage/mobile_view_dashboard.dart';
-import 'package:devbynasirulahmed/widgets/max_width_container.dart';
-import 'package:devbynasirulahmed/widgets/responsive_layout.dart';
 import 'package:devbynasirulahmed/widgets/drawer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:devbynasirulahmed/services/auth_service.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class DashBoard extends StatelessWidget {
+class DashBoard extends StatefulWidget {
+  static const String id = 'DashBoard';
+
+  @override
+  _DashBoardState createState() => _DashBoardState();
+}
+
+class _DashBoardState extends State<DashBoard> {
+  int regularAmount = 0;
+  int loanAmount = 0;
+  int totalCustomers = 0;
+  int totalLoanCustomers = 0;
+  DateTime getDate = DateTime.now();
+
+  getBalance() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    int? id = prefs.getInt('collectorId');
+
+    Uri url = Uri.parse(
+        "https://sanchay-new.herokuapp.com/api/collector/todays-deposit-collection");
+
+    try {
+      print("${getDate.year}-${getDate.month}-${getDate.day}");
+      print(id);
+      var res = await http.post(
+        url,
+        body: jsonEncode(<String, dynamic>{
+          "id": id,
+          "date": "${getDate.year}-${getDate.month}-${getDate.day}"
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (200 == res.statusCode) {
+        var jsonData = jsonDecode(res.body);
+
+        print(jsonData.toString());
+        setState(() {
+          regularAmount = jsonData['sum(amount)'] ?? 0;
+        });
+
+        return jsonData;
+      } else {
+        print(res.statusCode);
+      }
+    } catch (e) {}
+  }
+
+  getLoanBalance() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    int? id = prefs.getInt('collectorId');
+
+    Uri url = Uri.parse(
+        "https://sanchay-new.herokuapp.com/api/collector/loan/todays-deposit-collection");
+
+    try {
+      print(token);
+      print(id);
+      var res = await http.post(
+        url,
+        body: jsonEncode(<String, dynamic>{
+          "id": id,
+          "date": "${getDate.year}-${getDate.month}-${getDate.day}"
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (200 == res.statusCode) {
+        var jsonData = jsonDecode(res.body);
+
+        print(jsonData[0].toString());
+        setState(() {
+          regularAmount = jsonData['sum(amount)'];
+        });
+
+        return jsonData;
+      } else {
+        print(res.statusCode);
+      }
+    } catch (e) {}
+  }
+
+  totalCustomer() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    final url = Uri.parse(
+        'https://sanchay-new.herokuapp.com/api/total/customers/${_prefs.getInt('collectorId')}');
+
+    var body = jsonEncode({
+      "id": _prefs.getInt('collectorId'),
+    });
+
+    try {
+      var res = await http.get(url, headers: {
+        "Content-Type": "application/json",
+        'Accept': "*/*",
+        "Authorization": "Bearer ${_prefs.getString('token')}"
+      });
+      if (200 == res.statusCode) {
+        var jsondata = jsonDecode(res.body);
+        setState(() {
+          totalCustomers = jsondata['count(id)'];
+        });
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getBalance();
+    getLoanBalance();
+    totalCustomer();
+  }
+
   @override
   Widget build(BuildContext context) {
     //final firbaseUser = context.watch<User?>();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          getBalance();
+          getLoanBalance();
+        },
+        materialTapTargetSize: MaterialTapTargetSize.padded,
+        mini: true,
+        backgroundColor: Colors.yellow[800],
+        child: Icon(Icons.replay_rounded),
+      ),
       drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text('DashBoard'),
@@ -21,21 +151,24 @@ class DashBoard extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(right: 20),
             child: GestureDetector(
-              onTap: () {
-                AuthServices(FirebaseAuth.instance).signOut();
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.clear();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/login", (route) => false);
               },
               child: Row(
                 children: [
-                  Icon(Icons.person),
+                  Icon(Icons.logout),
                   SizedBox(
                     width: 5,
                   ),
-                  Text(
-                    'Logout',
-                    style: TextStyle(
-                      letterSpacing: 2,
-                    ),
-                  ),
+                  // Text(
+                  //   'Logout',
+                  //   style: TextStyle(
+                  //     fontSize: 14,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -47,96 +180,16 @@ class DashBoard extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
-          MaxWidthContainer(
-            child: Responsivelayout(
-              mobileView: mobileViewDashboard(context),
-              tabletView: desktopViewDashboard(context),
-            ),
-          )
+          // MaxWidthContainer(
+          //   child: Responsivelayout(
+          //     mobileView: mobileViewDashboard(context),
+          //     tabletView: desktopViewDashboard(context),
+          //   ),
+          // )
+          mobileViewDashboard(context, regularAmount, loanAmount,
+              totalCustomers, totalLoanCustomers)
         ],
       ),
     );
   }
-
-//   Widget collectionContainer(BuildContext context) {
-//     return Row(
-//       children: [
-//         Expanded(
-//           child: Container(
-//             width: MediaQuery.of(context).size.height / 2 ,
-//             height: 150,
-//             //height: MediaQuery.of(context).size.width / 2,
-
-//             child: Card(
-//               elevation: 16,
-//               color: Colors.yellow[800],
-//               child: Center(
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Text(
-//                       'Daily Deposit Collection',
-//                       style: TextStyle(
-//                         color: Colors.white,
-//                         fontSize: 14,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       height: 5,
-//                     ),
-//                     Text(
-//                       '00.0',
-//                       style: TextStyle(
-//                         color: Colors.white,
-//                         fontSize: 20,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//         Expanded(
-//           child: Container(
-//             width: MediaQuery.of(context).size.height / 2,
-//             height: 150,
-//             //height: MediaQuery.of(context).size.width / 2,
-//             child: Card(
-//               elevation: 16,
-//               color: Colors.yellow[800],
-//               child: Center(
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Text(
-//                       'Daily Loan Collection',
-//                       style: TextStyle(
-//                         color: Colors.white,
-//                         fontSize: 14,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       height: 5,
-//                     ),
-//                     Text(
-//                       '00.0',
-//                       style: TextStyle(
-//                         color: Colors.white,
-//                         fontSize: 20,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         )
-//       ],
-//     );
-//   }
 }

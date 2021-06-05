@@ -1,19 +1,15 @@
-import 'dart:convert';
+import 'dart:math';
 
-import 'package:devbynasirulahmed/models/customer.dart';
-import 'package:devbynasirulahmed/screen/add_customer/review_add_customer.dart';
-import 'package:devbynasirulahmed/screen/add_customer/review_mobile.dart';
+import 'package:devbynasirulahmed/screen/add_customer/add_loan/review_loan.dart';
 import 'package:devbynasirulahmed/widgets/customTextField.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
-import 'package:http/http.dart' as http;
 
-class AddCustomerMV extends StatefulWidget {
+class AddLoanCustomer extends StatefulWidget {
   @override
-  _AddCustomerMVState createState() => _AddCustomerMVState();
+  _AddLoanCustomerState createState() => _AddLoanCustomerState();
 }
 
-class _AddCustomerMVState extends State<AddCustomerMV> {
+class _AddLoanCustomerState extends State<AddLoanCustomer> {
   final _key = GlobalKey<FormState>();
 
   TextEditingController name = TextEditingController();
@@ -30,12 +26,13 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
   TextEditingController rateOfInterest = TextEditingController();
   //TextEditingController totalInstallments = TextEditingController();
   TextEditingController installmentAmount = TextEditingController();
+  TextEditingController loanAmount = TextEditingController();
 
   String agentUid = 'agent 1';
   int totalInstallments = 630;
   String accountType = '';
   String? maturityDate = '';
-  int totalPrincipalAmount = 0;
+  int payableAmount = 0;
   String createdAt = '';
   DateTime? mDate;
 
@@ -43,39 +40,8 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
 
   bool isLoading = false;
 
-  Future<Customer?> getAccountNo() async {
-    Uri url = Uri.parse("https://sanchay-new.herokuapp.com/api/agents/account");
-    try {
-      var res = await http.get(url, headers: {"Accept": "application/json"});
-      if (200 == res.statusCode) {
-        // final parsed = jsonDecode(res.body).cast<Map<String, dynamic>>();
-
-        // return parsed.map<Customer>((json) => Customer.fromJson(json));
-        Map<String, dynamic> customerMap = jsonDecode(res.body);
-        var customer = Customer.fromJson(customerMap);
-        print(customer.accountNumber.toString());
-        return customer;
-      }
-    } catch (e) {
-      throw e;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    Future<void> _selectDOB(BuildContext context) async {
-      final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(2015, 8),
-          lastDate: DateTime(2101));
-      if (picked != null) {
-        setState(() {
-          dob = "${picked.year}-${picked.month}-${picked.day}";
-        });
-      }
-    }
-
     return isLoading
         ? Center(
             child: CircularProgressIndicator(),
@@ -163,15 +129,15 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                   height: 8,
                 ),
                 customTextField(
+                    'Loan Amount', TextInputType.number, loanAmount),
+                SizedBox(
+                  height: 8,
+                ),
+                customTextField(
                     'Rate of Interst', TextInputType.number, rateOfInterest),
                 SizedBox(
                   height: 8,
                 ),
-                // customTextField(
-                //     'No. of Installments', TextInputType.number, totalInstallments),
-                // SizedBox(
-                //   height: 8,
-                // ),
                 customTextField('Installment Amounts', TextInputType.number,
                     installmentAmount),
                 SizedBox(
@@ -210,22 +176,6 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                     autofocus: true,
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 20, right: 20),
-                //   child: InkWell(
-                //     onTap: () => _selectMaturityDate(context),
-                //     child: IgnorePointer(
-                //       child: TextField(
-                //         //controller: maturityDate,
-                //         decoration: InputDecoration(
-                //           labelText:
-                //               maturityDate!.isEmpty ? 'Maturity Date' : maturityDate,
-                //           hintText: (maturityDate ?? '2021-03-19'),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Material(
@@ -233,14 +183,9 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                     borderRadius: BorderRadius.circular(30.0),
                     elevation: 5.0,
                     child: MaterialButton(
+                      // onPressed: () {},
                       //color: Colors.teal,
                       onPressed: () async {
-                        // setState(() {
-                        //   isLoading = true;
-                        // });
-
-                        //print(customerMap);
-
                         DateTime creationDate = DateTime.now();
 
                         setState(() {
@@ -252,24 +197,24 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                         print(mDate.toString());
 
                         if (_key.currentState!.validate()) {
-                          var random = new Random();
-                          int accountNumber = random.nextInt(9000) + 999;
+                          // var random = new Random();
+                          // int accountNumber = random.nextInt(9000) + 999;
 
                           if ('daily' == accountType) {
                             setState(() {
-                              totalPrincipalAmount =
+                              payableAmount =
                                   630 * int.parse(installmentAmount.text);
                               totalInstallments = 630;
                             });
                           } else if ('weekly' == accountType) {
                             setState(() {
-                              totalPrincipalAmount =
+                              payableAmount =
                                   90 * int.parse(installmentAmount.text);
                               totalInstallments = 90;
                             });
                           } else {
                             setState(() {
-                              totalPrincipalAmount =
+                              payableAmount =
                                   21 * int.parse(installmentAmount.text);
                               totalInstallments = 21;
                             });
@@ -281,10 +226,10 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                           // int totalPrincipalAmount =
                           //     (int.parse(totalInstallments.text.trim()) *
                           //         int.parse(installmentAmount.text.trim()));
-                          double totalInterestAmount = totalPrincipalAmount *
+                          double totalInterestAmount = payableAmount *
                               (int.parse(rateOfInterest.text) / 100);
-                          double totalMaturityAmount =
-                              totalPrincipalAmount + totalInterestAmount;
+                          // double totalMaturityAmount =
+                          //     totalPrincipalAmount + totalInterestAmount;
 
                           // String createdAt =
                           //     "${creationDate.year}-${creationDate.month}-${creationDate.day}";
@@ -297,7 +242,7 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ReviewMobile(
+                              builder: (context) => ReviewLoan(
                                 name.text,
                                 fatherName.text,
                                 address.text,
@@ -311,10 +256,9 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                                 int.parse(rateOfInterest.text),
                                 totalInstallments,
                                 int.parse(installmentAmount.text),
-                                maturityDate!,
-                                totalPrincipalAmount,
+                                payableAmount,
                                 totalInterestAmount,
-                                totalMaturityAmount,
+                                loanAmount,
                                 agentUid,
                                 int.parse(phone.text),
                                 accountType,
@@ -345,11 +289,17 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
             ),
           );
   }
+
+  Future<void> _selectDOB(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null) {
+      setState(() {
+        dob = "${picked.year}-${picked.month}-${picked.day}";
+      });
+    }
+  }
 }
-
-// Widget AddCustomeMV(context, VoidCallback onPressed) {
-  
-//   //
-
-  
-// }

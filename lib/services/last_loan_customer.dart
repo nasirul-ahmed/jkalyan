@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:devbynasirulahmed/models/api_response.dart';
+import 'package:devbynasirulahmed/models/loan_customer.dart';
 import 'package:http/http.dart' as http;
-import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LastCustomerAddedService {
-  Uri url = Uri.parse("https://sanchay-new.herokuapp.com/api/agents/account");
+class LastLoanCustomerAddedService {
+  Uri url =
+      Uri.parse("https://sanchay-new.herokuapp.com/api/agents/loan-account");
   static const headers = {"Accept": "application/json"};
-  Future<ApiResponse<Customer>> getLastCustomer() async {
+  Future<ApiResponse<LoanCustomer>> getLastCustomer() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String? token = _prefs.getString('token');
     //"Authorization": "Bearer $token"
@@ -19,19 +20,19 @@ class LastCustomerAddedService {
     try {
       if (200 == res.statusCode) {
         var customerMap = jsonDecode(res.body);
-        Customer customer = Customer.fromJson(customerMap[0]);
+        LoanCustomer customer = LoanCustomer.fromJson(customerMap[0]);
 
-        return ApiResponse<Customer>(
+        return ApiResponse<LoanCustomer>(
           data: customer,
         );
       } else {
-        return ApiResponse<Customer>(
+        return ApiResponse<LoanCustomer>(
           err: true,
           errorMsg: 'An Error occured',
         );
       }
     } catch (e) {
-      return ApiResponse<Customer>(
+      return ApiResponse<LoanCustomer>(
         err: true,
         errorMsg: 'An Error occured',
       );

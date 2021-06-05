@@ -7,14 +7,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UploadProfile extends StatefulWidget {
-  UploadProfile(this.accountNumber);
-  final int accountNumber;
+class UploadProfileLoan extends StatefulWidget {
+  // UploadProfile(this.accountNumber);
+  // final accountNumber;
   @override
-  _UploadProfileState createState() => _UploadProfileState();
+  _UploadProfileLoanState createState() => _UploadProfileLoanState();
 }
 
-class _UploadProfileState extends State<UploadProfile> {
+class _UploadProfileLoanState extends State<UploadProfileLoan> {
   bool isLoading = false;
 
   File? _profile;
@@ -172,11 +172,11 @@ class _UploadProfileState extends State<UploadProfile> {
     var data = jsonEncode(<String, dynamic>{
       "profile": _profileData,
       "signature": _signatureData,
-      "accountNumber": widget.accountNumber,
+      "accountNumber": 4,
       "id": _prefs.getInt('collectorId')
     });
 
-    print(widget.accountNumber);
+    // print(widget.accountNumber);
     String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
 
     try {
