@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadProfile extends StatefulWidget {
   UploadProfile(this.accountNumber);
-  final int accountNumber;
+  final accountNumber;
   @override
   _UploadProfileState createState() => _UploadProfileState();
 }
@@ -163,10 +164,33 @@ class _UploadProfileState extends State<UploadProfile> {
         });
   }
 
+  Future<void> accountCreated(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(' Documents uploaded'),
+            elevation: 16,
+            content: Text('Account Number: ${widget.accountNumber}'),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, DashBoard.id, (route) => false);
+                },
+                child: Text('Ok'),
+              ),
+            ],
+          );
+        });
+  }
+
   uploadPhoto(BuildContext context) async {
     setState(() {
       isLoading = true;
     });
+
+    //var newData =FlutterImageCompress.compressWithFile(_profile!.path, minHeight: 720,minWidth: 720, quality: 50) ;
 
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     var data = jsonEncode(<String, dynamic>{
@@ -177,19 +201,24 @@ class _UploadProfileState extends State<UploadProfile> {
     });
 
     print(widget.accountNumber);
-    String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
+    //String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
+    String uri =
+        'https://janakalyan-ag.herokuapp.com/api/agents/profile-upload';
 
     try {
-      var res = await http.post(Uri.parse(uri),
-          body: data,
-          headers: {"Authorization": "Bearer ${_prefs.getString('token')}"});
+      var res = await http.post(Uri.parse(uri), body: data, headers: {
+        "Content-Type": "application/json",
+        "Accept": "*/*",
+        "Authorization": "Bearer ${_prefs.getString('token')}"
+      });
       if (200 == res.statusCode) {
         print('photo uploaded');
         setState(() {
           isLoading = false;
         });
+
         Fluttertoast.showToast(
-          msg: "Documents Uploaded",
+          msg: "Files Uploaded",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -197,8 +226,7 @@ class _UploadProfileState extends State<UploadProfile> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        Navigator.pushNamedAndRemoveUntil(
-            context, DashBoard.id, (route) => false);
+        accountCreated(context);
       }
     } catch (e) {
       print(e);
@@ -326,7 +354,16 @@ class _UploadProfileState extends State<UploadProfile> {
                           ElevatedButton.styleFrom(primary: Colors.pink[600]),
                       onPressed: () => uploadPhoto(context),
                       child: Text('Upload Documents'),
-                    )
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (_) => DashBoard()),
+                            (route) => false);
+                      },
+                      child: Text('Skip'),
+                    ),
                   ],
                 ),
               ),

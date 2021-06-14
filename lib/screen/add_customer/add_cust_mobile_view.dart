@@ -28,13 +28,14 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
   TextEditingController relation = TextEditingController();
   TextEditingController nomineeFatherName = TextEditingController();
   TextEditingController rateOfInterest = TextEditingController();
-  //TextEditingController totalInstallments = TextEditingController();
+  TextEditingController nomineeAge = TextEditingController();
   TextEditingController installmentAmount = TextEditingController();
+  TextEditingController age = TextEditingController();
+  TextEditingController depositAmount = TextEditingController();
 
-  String agentUid = 'agent 1';
   int totalInstallments = 630;
   String accountType = '';
-  String? maturityDate = '';
+  String maturityDate = '';
   int totalPrincipalAmount = 0;
   String createdAt = '';
   DateTime? mDate;
@@ -63,22 +64,35 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _selectDOB(BuildContext context) async {
+    // Future<void> _selectDOB(BuildContext context) async {
+    //   final DateTime? picked = await showDatePicker(
+    //       context: context,
+    //       initialDate: DateTime.now(),
+    //       firstDate: DateTime(2015, 8),
+    //       lastDate: DateTime(2101));
+    //   if (picked != null) {
+    //     setState(() {
+    //       dob = "${picked.year}-${picked.month}-${picked.day}";
+    //     });
+    //   }
+    // }
+    Future<void> _selectCreatedAt(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(2015, 8),
-          lastDate: DateTime(2101));
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1990),
+        lastDate: DateTime(2101),
+      );
       if (picked != null) {
         setState(() {
-          dob = "${picked.year}-${picked.month}-${picked.day}";
+          createdAt = "${picked.year}-${picked.month}-${picked.day}";
         });
       }
     }
 
     return isLoading
         ? Center(
-            child: CircularProgressIndicator(),
+            child: Center(child: CircularProgressIndicator()),
           )
         : Form(
             key: _key,
@@ -106,21 +120,7 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                 SizedBox(
                   height: 8,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: InkWell(
-                    onTap: () => _selectDOB(context),
-                    child: IgnorePointer(
-                      child: TextField(
-                        //controller: maturityDate,
-                        decoration: InputDecoration(
-                          labelText: dob!.isEmpty ? 'Date of Birth' : dob,
-                          hintText: (dob ?? '2019-12-23'),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                customTextField('Age', TextInputType.number, age),
                 SizedBox(height: 8),
                 customTextField('Address', TextInputType.text, address),
                 SizedBox(
@@ -162,18 +162,22 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                 SizedBox(
                   height: 8,
                 ),
+                customTextField('Nominee Age', TextInputType.text, nomineeAge),
+                SizedBox(
+                  height: 8,
+                ),
                 customTextField(
                     'Rate of Interst', TextInputType.number, rateOfInterest),
                 SizedBox(
                   height: 8,
                 ),
-                // customTextField(
-                //     'No. of Installments', TextInputType.number, totalInstallments),
-                // SizedBox(
-                //   height: 8,
-                // ),
                 customTextField('Installment Amounts', TextInputType.number,
                     installmentAmount),
+                SizedBox(
+                  height: 8,
+                ),
+                customTextField(
+                    'Deposit Amount', TextInputType.number, depositAmount),
                 SizedBox(
                   height: 8,
                 ),
@@ -210,22 +214,22 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                     autofocus: true,
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 20, right: 20),
-                //   child: InkWell(
-                //     onTap: () => _selectMaturityDate(context),
-                //     child: IgnorePointer(
-                //       child: TextField(
-                //         //controller: maturityDate,
-                //         decoration: InputDecoration(
-                //           labelText:
-                //               maturityDate!.isEmpty ? 'Maturity Date' : maturityDate,
-                //           hintText: (maturityDate ?? '2021-03-19'),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: InkWell(
+                    onTap: () => _selectCreatedAt(context),
+                    child: IgnorePointer(
+                      child: TextField(
+                        //controller: maturityDate,
+                        decoration: InputDecoration(
+                          labelText:
+                              createdAt.isEmpty ? 'Created At' : createdAt,
+                          hintText: (createdAt),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Material(
@@ -235,23 +239,23 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                     child: MaterialButton(
                       //color: Colors.teal,
                       onPressed: () async {
-                        // setState(() {
-                        //   isLoading = true;
-                        // });
-
-                        //print(customerMap);
-
-                        DateTime creationDate = DateTime.now();
-
-                        setState(() {
-                          createdAt =
-                              "${creationDate.year}-${creationDate.month}-${creationDate.day}";
-                          mDate = DateTime(creationDate.year,
-                              creationDate.month + 21, creationDate.day);
-                        });
-                        print(mDate.toString());
-
                         if (_key.currentState!.validate()) {
+                          print('createdAt: ' + createdAt);
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          //print(customerMap);
+
+                          DateTime creationDate = DateTime.now();
+
+                          setState(() {
+                            // createdAt =
+                            //     "${creationDate.year}-${creationDate.month}-${creationDate.day}";
+                            mDate = DateTime(creationDate.year,
+                                creationDate.month + 21, creationDate.day);
+                          });
+                          print(mDate.toString());
                           var random = new Random();
                           int accountNumber = random.nextInt(9000) + 999;
 
@@ -290,9 +294,9 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                           //     "${creationDate.year}-${creationDate.month}-${creationDate.day}";
                           // print(createdAt);
 
-                          // setState(() {
-                          //   isLoading = false;
-                          // });
+                          setState(() {
+                            isLoading = false;
+                          });
 
                           Navigator.push(
                             context,
@@ -308,18 +312,19 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                                 int.parse(nomineePhone.text),
                                 relation.text,
                                 nomineeFatherName.text,
+                                int.parse(nomineeAge.text),
                                 int.parse(rateOfInterest.text),
                                 totalInstallments,
                                 int.parse(installmentAmount.text),
-                                maturityDate!,
+                                maturityDate,
                                 totalPrincipalAmount,
                                 totalInterestAmount,
                                 totalMaturityAmount,
-                                agentUid,
                                 int.parse(phone.text),
                                 accountType,
-                                dob!,
+                                age.text,
                                 createdAt,
+                                int.parse(depositAmount.text),
                               ),
                             ),
                           );

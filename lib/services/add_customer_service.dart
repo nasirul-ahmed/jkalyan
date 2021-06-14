@@ -5,32 +5,32 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Customer> createCustomer(
-  int accountNumber,
-  String name,
-  String fatherName,
-  String address,
-  int pinCode,
-  int phone,
-  String occupation,
-  String dob,
-  String nomineeName,
-  String nomineeAddress,
-  int nomineePhone,
-  String relation,
-  String nomineeFatherName,
-  String createdAt,
-  int rateOfInterest,
-  int totalInstallments,
-  int installmentAmount,
-  int totalPrincipalAmount,
-  double totalInterestAmount,
-  double totalMaturityAmount,
-  String maturityDate,
-  String agentUid,
-  String accountType,
-) async {
+    int accountNumber,
+    String name,
+    String fatherName,
+    String address,
+    int pinCode,
+    int phone,
+    String occupation,
+    String age,
+    String nomineeName,
+    String nomineeAddress,
+    int nomineePhone,
+    String relation,
+    String nomineeFatherName,
+    String createdAt,
+    int rateOfInterest,
+    int totalInstallments,
+    int installmentAmount,
+    int totalPrincipalAmount,
+    double totalInterestAmount,
+    double totalMaturityAmount,
+    String maturityDate,
+    String accountType,
+    int nomineeAge,
+    int depositAmount) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
-  String uri = 'https://sanchay-new.herokuapp.com/api/agents/customer/create';
+  String uri = 'https://janakalyan-ag.herokuapp.com/api/agents/customer/create';
   final response = await http.post(
     Uri.parse(uri),
     headers: <String, String>{
@@ -46,12 +46,13 @@ Future<Customer> createCustomer(
       'pinCode': pinCode,
       'phone': phone,
       'occupation': occupation,
-      'dob': dob,
+      'age': int.parse(age),
       'nomineeName': nomineeName,
       'nomineeAddress': nomineeAddress,
       'nomineePhone': nomineePhone,
       'relation': relation,
       'nomineeFatherName': nomineeFatherName,
+      'nomineeAge': nomineeAge,
       'createdAt': createdAt,
       'rateOfInterest': rateOfInterest,
       'totalInstallments': totalInstallments,
@@ -62,13 +63,14 @@ Future<Customer> createCustomer(
       'maturityDate': maturityDate,
       'agentUid': _prefs.getInt("collectorId"),
       "accountType": accountType,
+      'totalCollection': depositAmount
     }),
   );
 
-  if (response.statusCode >= 200 && response.statusCode < 404) {
+  if (response.statusCode == 200) {
     print('success added' + response.body.toString());
-
-    return Customer.fromJson(jsonDecode(response.body));
+    var jsonData = jsonDecode(response.body);
+    return Customer.fromJson(jsonData);
   } else {
     print(response.statusCode);
     throw Exception('wrong');

@@ -5,12 +5,12 @@ import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LastCustomerAddedService {
-  Uri url = Uri.parse("https://sanchay-new.herokuapp.com/api/agents/account");
-  static const headers = {"Accept": "application/json"};
+  Uri url = Uri.parse("https://janakalyan-ag.herokuapp.com/api/agents/account");
+
   Future<ApiResponse<Customer>> getLastCustomer() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String? token = _prefs.getString('token');
-    //"Authorization": "Bearer $token"
+
     var res = await http.get(url, headers: {
       "Accept": "application/json",
       "Authorization": "Bearer $token"

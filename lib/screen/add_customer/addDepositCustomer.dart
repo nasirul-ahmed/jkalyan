@@ -15,8 +15,7 @@ class AddDepositCustomer extends StatelessWidget {
         ),
         body: Scrollbar(
           child: MaxWidthContainer(
-            child: Responsivelayout(
-                mobileView: AddCustomerMV(), desktopView: AddCustomerDV()),
+            child: Responsivelayout(mobileView: AddCustomerMV()),
           ),
         ));
   }

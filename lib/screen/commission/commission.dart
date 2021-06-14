@@ -16,51 +16,73 @@ class _CommissionState extends State<Commission> {
       ),
       body: Column(
         children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'note: Your commission is 4%',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
           Card(
-            color: Colors.lime[600],
+            color: Colors.grey,
             child: Container(
-              height: 100,
-              width: MediaQuery.of(context).size.width,
+              height: 200,
+              width: MediaQuery.of(context).size.width - 30,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Commission Percentage',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    'Total Wallet Balance',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    '5%',
+                    '00.00',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   )
                 ],
               ),
             ),
           ),
-          Card(
-            color: Colors.lime[900],
-            child: Container(
-              height: 100,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Today\'s Collection',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    '2444',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  )
-                ],
+          SizedBox(
+            height: 30,
+          ),
+          Expanded(
+            child: Card(
+              color: Colors.blue[700],
+              child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width - 30,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Commission Balance',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '00.00',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    )
+                  ],
+                ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 50,
           ),
         ],
       ),

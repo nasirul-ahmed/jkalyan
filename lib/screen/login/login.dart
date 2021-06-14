@@ -25,7 +25,8 @@ class _LoginState extends State<Login> {
     });
     SharedPreferences pref = await SharedPreferences.getInstance();
     print("hello");
-    const url = "https://sanchay-new.herokuapp.com/api/collector/login";
+    //const url = "https://janakalyan-ag.herokuapp.com/api/collector/login";
+    const url = "https://janakalyan-ag.herokuapp.com/api/collector/login";
 
     try {
       print(_email.text);
@@ -53,7 +54,9 @@ class _LoginState extends State<Login> {
           await pref.setString('token', token["token"]);
           await pref.setBool('isLogged', true);
           await pref.setInt('collectorId', token["id"]);
-          
+          //await pref.setString('name', token["name"]);
+          await pref.setString('email', token["email"]);
+
           //final auth = watch(authProvider).state;
           //context.read(authProvider).state = true;
           // Provider.of<AuthNotifier>(context, listen: false).isLogin();
@@ -61,8 +64,8 @@ class _LoginState extends State<Login> {
               MaterialPageRoute(builder: (_) => DashBoard()), (route) => false);
         }
 
-        print(token);
-        return token;
+        // print(token);
+        // return token;
       }
       setState(() {
         isLoading = false;

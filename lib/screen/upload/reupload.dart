@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ReUploadProfile extends StatefulWidget {
   static const String id = 'ReUploadProfile';
@@ -41,13 +43,14 @@ class _ReUploadProfileState extends State<ReUploadProfile> {
 
   _openCamera(BuildContext context) async {
     final _selectedProfile =
-        await picker.getImage(source: ImageSource.camera, imageQuality: 25);
+        await picker.getImage(source: ImageSource.camera, imageQuality: 10);
 
     if (_selectedProfile != null) {
       setState(() {
         _profile = File(_selectedProfile.path);
       });
     }
+
     _profileData = base64Encode(_profile!.readAsBytesSync());
     Navigator.pop(context);
   }
@@ -67,7 +70,7 @@ class _ReUploadProfileState extends State<ReUploadProfile> {
 
   _openCamera2(BuildContext context) async {
     final _selectedSig =
-        await picker.getImage(source: ImageSource.camera, imageQuality: 25);
+        await picker.getImage(source: ImageSource.camera, imageQuality: 10);
     if (_selectedSig != null) {
       setState(() {
         _signature = File(_selectedSig.path);
@@ -165,11 +168,27 @@ class _ReUploadProfileState extends State<ReUploadProfile> {
         });
   }
 
+  Future<Uint8List?> egt() async {
+    var result = await FlutterImageCompress.compressWithFile(_profile!.path,
+        minHeight: 720, minWidth: 720, quality: 80);
+    print("filesize: ${(result!.lengthInBytes)}");
+
+    return result;
+  }
+
   uploadPhoto(BuildContext context) async {
     //if (!_key.currentState!.validate()) return;
     setState(() {
       isLoading = true;
     });
+    //egt();
+    print("size ${_profile!.lengthSync()}");
+    var profileImg = FlutterImageCompress.compressWithList(
+      _profile!.readAsBytesSync(),
+      minHeight: 700,
+      minWidth: 700,
+    );
+    // String pImg = base64Encode(profileImg);
     SharedPreferences _prefs = await SharedPreferences.getInstance();
 
     var data = jsonEncode(<String, dynamic>{
@@ -179,7 +198,8 @@ class _ReUploadProfileState extends State<ReUploadProfile> {
       "id": _prefs.getInt('collectorId')
     });
 
-    String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
+    String uri = 'https://janakalyan-ag.herokuapp.com/profile-upload';
+    //String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
 
     try {
       var res = await http.post(Uri.parse(uri), body: data, headers: {

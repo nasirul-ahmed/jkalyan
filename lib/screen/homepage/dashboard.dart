@@ -133,59 +133,27 @@ class _DashBoardState extends State<DashBoard> {
   Widget build(BuildContext context) {
     //final firbaseUser = context.watch<User?>();
     return Scaffold(
+      extendBodyBehindAppBar: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           getBalance();
           getLoanBalance();
         },
         materialTapTargetSize: MaterialTapTargetSize.padded,
-        mini: true,
-        backgroundColor: Colors.yellow[800],
+        mini: false,
+        backgroundColor: Colors.green,
         child: Icon(Icons.replay_rounded),
       ),
       drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text('DashBoard'),
         backgroundColor: Colors.pink[900],
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: GestureDetector(
-              onTap: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.clear();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "/login", (route) => false);
-              },
-              child: Row(
-                children: [
-                  Icon(Icons.logout),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  // Text(
-                  //   'Logout',
-                  //   style: TextStyle(
-                  //     fontSize: 14,
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-          )
-        ],
       ),
       body: Column(
         children: [
           SizedBox(
             height: 8,
           ),
-          // MaxWidthContainer(
-          //   child: Responsivelayout(
-          //     mobileView: mobileViewDashboard(context),
-          //     tabletView: desktopViewDashboard(context),
-          //   ),
-          // )
           mobileViewDashboard(context, regularAmount, loanAmount,
               totalCustomers, totalLoanCustomers)
         ],

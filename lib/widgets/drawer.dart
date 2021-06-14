@@ -1,14 +1,13 @@
-import 'package:devbynasirulahmed/models/api_response.dart';
+import 'dart:convert';
+import 'package:devbynasirulahmed/screen/old_customers/old_viewer.dart';
+import 'package:devbynasirulahmed/screen/tnx/transactions.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/deposit/deposit_transfer_view.dart';
 import 'package:devbynasirulahmed/screen/upload/reupload.dart';
-import 'package:devbynasirulahmed/services/collector/collector.services.dart';
-import 'package:devbynasirulahmed/services/providers/auth_provider.dart';
+import 'package:devbynasirulahmed/screen/wallet/passbook.dart';
+import 'package:devbynasirulahmed/services/auth/logout.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
-import 'package:devbynasirulahmed/models/collector.dart';
-import 'package:progress_indicators/progress_indicators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -20,13 +19,44 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   String? email;
   String? name;
+  int? id;
+  int totalCustomer = 0;
 
   getEmail() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     setState(() {
       email = _prefs.getString("email");
       name = _prefs.getString("name");
+      id = _prefs.getInt("collectorId");
     });
+  }
+
+  getTotalCustomers() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    Uri uri = Uri.parse(
+        'https://janakalyan-ag.herokuapp.com/api/collector/total/customers/${_prefs.getInt("collectorId")}');
+
+    try {
+      final res = await http.get(uri,
+          // body:
+          //     jsonEncode(<String, dynamic>{"id": _prefs.getInt("collectorId")}),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*",
+            "Authorization": "Bearer ${_prefs.getString('token')}"
+          });
+
+      if (200 == res.statusCode) {
+        var jsonData = jsonDecode(res.body);
+        print(jsonData);
+
+        setState(() {
+          totalCustomer = jsonData['totalCustomers'];
+        });
+      } else {}
+    } catch (e) {
+      throw Exception('Error');
+    }
   }
 
   @override
@@ -34,6 +64,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     super.initState();
     //_getCollector = getCollector();
     getEmail();
+    getTotalCustomers();
   }
 
   @override
@@ -43,19 +74,41 @@ class _CustomDrawerState extends State<CustomDrawer> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            GestureDetector(
+            InkWell(
+              focusColor: Colors.blueGrey[800],
+              splashColor: Colors.blueGrey[800],
+              onTap: () {},
               child: UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: Colors.orange[700],
                   child: Icon(Icons.person, color: Colors.white),
                 ),
-                accountEmail: Text(email ?? ''),
-                accountName: Text('$name', style: TextStyle(fontSize: 20)),
+                accountEmail: Text(email ?? 'Collector Code: $id'),
+                accountName:
+                    Text('Collector Code: $id', style: TextStyle(fontSize: 20)),
                 margin: EdgeInsets.zero,
                 decoration: BoxDecoration(
                   color: Colors.green,
                   //shape: BoxShape.circle,
                 ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: ListTile(
+                leading: Icon(
+                  Icons.book_rounded,
+                  color: Colors.green,
+                  size: 20,
+                ),
+                title: Text(
+                  'Passbook',
+                  style: TextStyle(fontSize: 18, color: Colors.black),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => PassBook()));
+                },
               ),
             ),
             Container(
@@ -81,18 +134,38 @@ class _CustomDrawerState extends State<CustomDrawer> {
               decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
                 leading: Icon(
-                  Icons.person_outline,
+                  Icons.pending_actions,
                   color: Colors.green,
                   size: 20,
                 ),
                 title: Text(
-                  'Customers',
+                  'Transaction History',
                   style: TextStyle(fontSize: 18, color: Colors.black),
                 ),
                 onTap: () {
                   // Update the state of the app.
                   // ...
-                  Navigator.pushNamed(context, ReUploadProfile.id);
+                  Navigator.pushNamed(context, TransactionsView.id);
+                },
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: ListTile(
+                leading: Icon(
+                  Icons.person_outline,
+                  color: Colors.green,
+                  size: 20,
+                ),
+                title: Text(
+                  'Closed A/c ($totalCustomer)',
+                  style: TextStyle(fontSize: 18, color: Colors.black),
+                ),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => OldCustomerView()));
                 },
               ),
             ),
@@ -125,7 +198,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
             Container(
               child: ListTile(
                 onTap: () async {
-                  Provider.of<AuthNotifier>(context, listen: false).logOut();
+                  //Provider.of<AuthNotifier>(context, listen: false).logOut();
+                  AuthHandle().logOut(context);
                 },
                 title: Text(
                   'Log Out',

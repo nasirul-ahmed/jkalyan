@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:devbynasirulahmed/screen/apply_loan/apply_loan.dart';
 import 'package:devbynasirulahmed/screen/collection/deposit_collection/collection.dart';
 import 'package:devbynasirulahmed/screen/commission/commission.dart';
 import 'package:devbynasirulahmed/screen/edit_customer/depost/edit_deposit_customer.dart';
@@ -63,6 +64,7 @@ class Index extends StatelessWidget {
         SearchDeposit.id: (_) => SearchDeposit(),
         DepositTransferView.id: (_) => DepositTransferView(),
         TransferLoanView.id: (_) => TransferLoanView(),
+        ApplyLoan.id: (_) => ApplyLoan(),
       },
     );
   }
