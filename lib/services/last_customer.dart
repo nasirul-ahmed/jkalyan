@@ -5,7 +5,7 @@ import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LastCustomerAddedService {
-  Uri url = Uri.parse("https://janakalyan-ag.herokuapp.com/api/agents/account");
+  Uri url = Uri.parse("https://sanchay-new.herokuapp.com/api/agents/account");
 
   Future<ApiResponse<Customer>> getLastCustomer() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();

@@ -11,7 +11,7 @@ uploadPhoto(_profileData, _signatureData, accountNumber) async {
     "id": _prefs.getInt('collectorId')
   });
 
-  String uri = 'https://janakalyan-ag.herokuapp.com/profile-upload';
+  String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
 
   try {
     var res = await http.post(Uri.parse(uri),

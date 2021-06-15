@@ -198,7 +198,7 @@ class _ReUploadProfileState extends State<ReUploadProfile> {
       "id": _prefs.getInt('collectorId')
     });
 
-    String uri = 'https://janakalyan-ag.herokuapp.com/profile-upload';
+    String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
     //String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
 
     try {

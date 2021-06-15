@@ -62,7 +62,7 @@ class Customer {
   int? totalPrincipalAmount;
   int? totalInterestAmount;
   int? totalMaturityAmount;
-  String? agentUid;
+  int? agentUid;
   String? createdAt;
   int? phone;
   int? age;
@@ -74,35 +74,35 @@ class Customer {
   int? isActive;
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-      id: json["id"],
-      accountNumber: json["accountNumber"],
-      name: json["name"],
-      fatherName: json["fatherName"],
-      address: json["address"],
-      pinCode: json["pinCode"],
-      occupation: json["occupation"],
-      nomineeName: json["nomineeName"],
-      nomineeAddress: json["nomineeAddress"],
-      nomineePhone: json["nomineePhone"],
-      relation: json["relation"],
-      nomineeFatherName: json["nomineeFatherName"],
-      rateOfInterest: json["rateOfInterest"],
-      totalInstallments: json["totalInstallments"],
-      installmentAmount: json["installmentAmount"],
-      maturityDate: json["maturityDate"],
-      totalPrincipalAmount: json["totalPrincipalAmount"],
-      totalInterestAmount: json["totalInterestAmount"],
-      totalMaturityAmount: json["totalMaturityAmount"],
-      agentUid: json["agentUid"],
-      createdAt: json["createdAt"],
-      phone: json["phone"],
-      age: json["age"],
-      nomineeAge: json["nomineeAge"],
-      accountType: json["accountType"],
-      profile: json["profile"],
-      signature: json["signature"],
-      totalCollection: json["totalCollection"],
-      isActive: json["isActive"],
+        id: json["id"],
+        accountNumber: json["accountNumber"],
+        name: json["name"],
+        fatherName: json["fatherName"],
+        address: json["address"],
+        pinCode: json["pinCode"],
+        occupation: json["occupation"],
+        nomineeName: json["nomineeName"],
+        nomineeAddress: json["nomineeAddress"],
+        nomineePhone: json["nomineePhone"],
+        relation: json["relation"],
+        nomineeFatherName: json["nomineeFatherName"],
+        rateOfInterest: json["rateOfInterest"],
+        totalInstallments: json["totalInstallments"],
+        installmentAmount: json["installmentAmount"],
+        maturityDate: json["maturityDate"],
+        totalPrincipalAmount: json["totalPrincipalAmount"],
+        totalInterestAmount: json["totalInterestAmount"],
+        totalMaturityAmount: json["totalMaturityAmount"],
+        agentUid: json["agentUid"],
+        createdAt: json["createdAt"],
+        phone: json["phone"],
+        age: json["age"],
+        nomineeAge: json["nomineeAge"],
+        accountType: json["accountType"],
+        profile: json["profile"],
+        signature: json["signature"],
+        totalCollection: json["totalCollection"],
+        isActive: json["isActive"],
       );
 
   Map<String, dynamic> toJson() => {

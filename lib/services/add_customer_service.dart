@@ -30,7 +30,7 @@ Future<Customer> createCustomer(
     int nomineeAge,
     int depositAmount) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
-  String uri = 'https://janakalyan-ag.herokuapp.com/api/agents/customer/create';
+  String uri = 'https://sanchay-new.herokuapp.com/api/agents/customer/create';
   final response = await http.post(
     Uri.parse(uri),
     headers: <String, String>{
@@ -54,7 +54,7 @@ Future<Customer> createCustomer(
       'nomineeFatherName': nomineeFatherName,
       'nomineeAge': nomineeAge,
       'createdAt': createdAt,
-      'rateOfInterest': rateOfInterest,
+      //'rateOfInterest': rateOfInterest,
       'totalInstallments': totalInstallments,
       'installmentAmount': installmentAmount,
       'totalPrincipalAmount': totalPrincipalAmount,
@@ -63,7 +63,7 @@ Future<Customer> createCustomer(
       'maturityDate': maturityDate,
       'agentUid': _prefs.getInt("collectorId"),
       "accountType": accountType,
-      'totalCollection': depositAmount
+      //'totalCollection': depositAmount
     }),
   );
 

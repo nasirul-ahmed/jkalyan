@@ -64,10 +64,12 @@ class _DepositCollectionState extends State<DepositCollection> {
             "Authorization": "Bearer ${_prefs.getString('token')}"
           });
       if (200 == res.statusCode) {
+        print(jsonDecode(res.body).toString());
         return compute(parseCustomer, res.body);
       }
       return List<Customer>.empty();
     } catch (e) {
+      print(e);
       throw e;
     }
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 
@@ -37,8 +38,7 @@ class _CollectionDetailsState extends State<CollectionDetails> {
       int? collectorId = prefs.getInt('collectorId');
       // print(prefs.getInt('collectorId').toString());
       // print(_amount.text);
-      String url =
-          "https://sanchay-new.herokuapp.com/api/collector/deposit-collection";
+      String url = "$janaklyan/api/collector/deposit-collection";
 
       //SharedPreferences _prefs = await SharedPreferences.getInstance();
 

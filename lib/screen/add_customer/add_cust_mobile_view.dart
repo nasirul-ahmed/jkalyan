@@ -166,21 +166,21 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                 SizedBox(
                   height: 8,
                 ),
-                customTextField(
-                    'Rate of Interst', TextInputType.number, rateOfInterest),
-                SizedBox(
-                  height: 8,
-                ),
+                // customTextField(
+                //     'Rate of Interst', TextInputType.number, rateOfInterest),
+                // SizedBox(
+                //   height: 8,
+                // ),
                 customTextField('Installment Amounts', TextInputType.number,
                     installmentAmount),
                 SizedBox(
                   height: 8,
                 ),
-                customTextField(
-                    'Deposit Amount', TextInputType.number, depositAmount),
-                SizedBox(
-                  height: 8,
-                ),
+                // customTextField(
+                //     'Deposit Amount', TextInputType.number, depositAmount),
+                // SizedBox(
+                //   height: 8,
+                // ),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: DropdownButtonFormField<String>(

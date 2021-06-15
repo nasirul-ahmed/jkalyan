@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<Customer> getAcById(int createdId) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
   String uri =
-      'https://janakalyan-ag.herokuapp.com/api/agents/customer/$createdId';
+      'https://sanchay-new.herokuapp.com/api/agents/customer/$createdId';
   final response = await http.get(
     Uri.parse(uri),
     headers: <String, String>{
