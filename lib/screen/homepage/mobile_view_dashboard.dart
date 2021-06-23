@@ -2,15 +2,13 @@ import 'package:devbynasirulahmed/screen/add_customer/addDepositCustomer.dart';
 import 'package:devbynasirulahmed/screen/apply_loan/apply_loan.dart';
 import 'package:devbynasirulahmed/screen/collection/deposit_collection/deposit_collection.dart';
 import 'package:devbynasirulahmed/screen/commission/commission.dart';
-
-import 'package:devbynasirulahmed/screen/edit_customer/depost/search_deposit.dart';
+import 'package:devbynasirulahmed/screen/maturity/maturity_view.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/deposit/deposit_transfer_view.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/loan/transfer_loan_view.dart';
-
 import 'package:flutter/material.dart';
 
-Widget mobileViewDashboard(BuildContext context, int regularAmount,
-    int loanAmount, int totalCustomers, int totalLoanCustomers) {
+Widget mobileViewDashboard(BuildContext context, int? regularAmount,
+    int? loanAmount, int? totalCustomers, int? totalLoanCustomers) {
   var screen = MediaQuery.of(context).size;
   return Expanded(
     child: Column(
@@ -56,7 +54,9 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
                           height: 5,
                         ),
                         Text(
-                          '₹ $regularAmount.0',
+                          regularAmount != null
+                              ? '₹ $regularAmount.0'
+                              : '₹ 0.0',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -109,7 +109,7 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
                           height: 5,
                         ),
                         Text(
-                          '₹ $loanAmount.0',
+                          loanAmount == null ? '₹ 0.0' : '₹ $loanAmount.0',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -199,7 +199,9 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
                                 width: 20,
                               ),
                               Text(
-                                '($totalCustomers)',
+                                totalCustomers == null
+                                    ? '(0)'
+                                    : '($totalCustomers)',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -213,7 +215,7 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Expanded(
                     child: InkWell(
@@ -263,7 +265,7 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 2,
         ),
         Expanded(
           child: Card(
@@ -303,7 +305,12 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, SearchDeposit.id);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => MaturityView(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 50,
@@ -338,7 +345,7 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Expanded(
                     child: InkWell(
@@ -443,7 +450,7 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         Expanded(
           child: Card(
@@ -518,7 +525,7 @@ Widget mobileViewDashboard(BuildContext context, int regularAmount,
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Expanded(
                     child: InkWell(

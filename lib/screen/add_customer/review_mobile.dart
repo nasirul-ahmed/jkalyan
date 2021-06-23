@@ -10,29 +10,30 @@ import 'package:get_it/get_it.dart';
 
 class ReviewMobile extends StatefulWidget {
   ReviewMobile(
-      this.name,
-      this.fatherName,
-      this.address,
-      this.pinCode,
-      this.occupation,
-      this.nomineeName,
-      this.nomineeAddress,
-      this.nomineePhone,
-      this.relation,
-      this.nomineeFatherName,
-      this.nomineeAge,
-      this.rateOfInterest,
-      this.totalInstallments,
-      this.installmentAmount,
-      this.maturityDate,
-      this.totalPrincipalAmount,
-      this.totalInterestAmount,
-      this.totalMaturityAmount,
-      this.phone,
-      this.accountType,
-      this.age,
-      this.createdAt,
-      this.depositAmount);
+    this.name,
+    this.fatherName,
+    this.address,
+    this.pinCode,
+    this.occupation,
+    this.nomineeName,
+    this.nomineeAddress,
+    this.nomineePhone,
+    this.relation,
+    this.nomineeFatherName,
+    this.nomineeAge,
+    //this.rateOfInterest,
+    this.totalInstallments,
+    this.installmentAmount,
+    this.maturityDate,
+    this.totalPrincipalAmount,
+    //this.totalInterestAmount,
+    this.totalMaturityAmount,
+    this.phone,
+    this.accountType,
+    this.age,
+    this.createdAt,
+    //this.depositAmount
+  );
 
   final String name;
 
@@ -47,19 +48,19 @@ class ReviewMobile extends StatefulWidget {
   final String relation;
   final String nomineeFatherName;
   final int nomineeAge;
-  final int rateOfInterest;
+  //final int rateOfInterest;
   final int totalInstallments;
   final int installmentAmount;
   final String maturityDate;
   final int totalPrincipalAmount;
-  final double totalInterestAmount;
+  // final double totalInterestAmount;
   final double totalMaturityAmount;
 
   final int phone;
   final String accountType;
   final String age;
   final String createdAt;
-  final int depositAmount;
+  //final int depositAmount;
 
   @override
   _ReviewMobileState createState() => _ReviewMobileState();
@@ -170,8 +171,8 @@ class _ReviewMobileState extends State<ReviewMobile> {
                   EditableDetailsMobile(
                       'Nominee Father', widget.nomineeFatherName),
                   EditableDetailsMobile('Nominee Age', widget.nomineeAge),
-                  EditableDetailsMobile(
-                      'Rate of Interest', widget.rateOfInterest),
+                  // EditableDetailsMobile(
+                  //     'Rate of Interest', widget.rateOfInterest),
                   EditableDetailsMobile(
                       'Total Installments', widget.totalInstallments),
                   EditableDetailsMobile(
@@ -179,14 +180,14 @@ class _ReviewMobileState extends State<ReviewMobile> {
                   EditableDetailsMobile('Maturity Date', widget.maturityDate),
                   EditableDetailsMobile(
                       'Principal Amount', widget.totalPrincipalAmount),
-                  EditableDetailsMobile(
-                      'Interest Amount', widget.totalInterestAmount),
+                  // EditableDetailsMobile(
+                  //     'Interest Amount', widget.totalInterestAmount),
                   EditableDetailsMobile(
                       'Maturity Amount', widget.totalMaturityAmount),
                   EditableDetailsMobile('Age', widget.age),
                   EditableDetailsMobile('Account Type', widget.accountType),
                   EditableDetailsMobile('Created At', widget.createdAt),
-                  EditableDetailsMobile('First Deposit', widget.depositAmount),
+                  //EditableDetailsMobile('First Deposit', widget.depositAmount),
                   SizedBox(height: 30),
                   Padding(
                     padding: const EdgeInsets.only(left: 5, right: 5),
@@ -234,22 +235,15 @@ class _ReviewMobileState extends State<ReviewMobile> {
                                 widget.relation,
                                 widget.nomineeFatherName,
                                 widget.createdAt,
-                                widget.rateOfInterest,
+                                //widget.rateOfInterest,
                                 widget.totalInstallments,
                                 widget.installmentAmount,
                                 widget.totalPrincipalAmount,
-                                widget.totalInterestAmount,
                                 widget.totalMaturityAmount,
                                 widget.maturityDate,
                                 widget.accountType,
                                 widget.nomineeAge,
-                                widget.depositAmount,
                               );
-
-                              //Map<String, dynamic> getId = jsonDecode(res);
-                              setState(() {
-                                isLoading = true;
-                              });
 
                               Fluttertoast.showToast(
                                 msg:

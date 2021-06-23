@@ -1,53 +1,21 @@
-import 'package:devbynasirulahmed/models/deposit_tnx.dart';
-import 'package:devbynasirulahmed/services/deposits_tnx/depost_tnx.services.dart';
+import 'package:devbynasirulahmed/models/loan_deposit_tnx.dart';
+import 'package:devbynasirulahmed/services/loan_deposit_tnx/loan_deposit_tnx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
-class TransferDeposit extends StatefulWidget {
-  static const String id = 'TransferDeposit';
+class TransferLoan extends StatefulWidget {
+  static const String id = 'TransferLoan';
   @override
-  _TransferDepositState createState() => _TransferDepositState();
+  _TransferLoanState createState() => _TransferLoanState();
 }
 
-class _TransferDepositState extends State<TransferDeposit> {
-  // handlePress() async {
-  //   showLoadingDialog(context);
-  //   DateTime date = DateTime.now();
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? token = prefs.getString('token');
-  //   int? id = prefs.getInt('collectorId');
-
-  //   Uri url = Uri.parse("$janaklyan/api/collector/create/deposit/tnx");
-
-  //   try {
-  //     var res = await http.post(
-  //       url,
-  //       body: jsonEncode(<String, dynamic>{
-  //         "collectorId": id,
-  //         "date": "${date.year}-${date.month}-${date.day}",
-  //       }),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         "Authorization": "Bearer $token"
-  //       },
-  //     );
-
-  //     if (200 == res.statusCode) {
-  //       Navigator.pop(context);
-  //       Fluttertoast.showToast(msg: 'Sent to manager');
-  //     } else {
-  //       Navigator.pop(context);
-  //       showErrorDialog(context);
-  //     }
-  //   } catch (e) {}
-  // }
-
+class _TransferLoanState extends State<TransferLoan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Deposit History"),
+        title: Text("Loan Deposit History"),
         backgroundColor: Colors.amber[800],
       ),
       body: Column(
@@ -64,8 +32,8 @@ class _TransferDepositState extends State<TransferDeposit> {
                     ),
                   ),
                 ),
-                child: FutureBuilder<List<DepositTnxModel>>(
-                  future: getDepositsTnx(),
+                child: FutureBuilder<List<LoanDepositTnxModel>>(
+                  future: getLoanDepositsTnx(),
                   builder: (_, snap) {
                     if (snap.hasError) {
                       return Center(
@@ -94,7 +62,7 @@ class _TransferDepositState extends State<TransferDeposit> {
     );
   }
 
-  Widget customViews(DepositTnxModel? doc) {
+  Widget customViews(LoanDepositTnxModel? doc) {
     const IconData check = IconData(0xe156, fontFamily: 'MaterialIcons');
     DateTime date = DateTime.parse(doc!.createdAt!);
     return Padding(
@@ -143,7 +111,7 @@ class _TransferDepositState extends State<TransferDeposit> {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "Collector id : " + "${doc.collectorId}",
+                            "Collector id : " + "${doc.collector}",
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black,
@@ -172,6 +140,14 @@ class _TransferDepositState extends State<TransferDeposit> {
                     ],
                   ),
                 ),
+
+                // Expanded(
+                //   child: SizedBox(
+                //     width: 1,
+                //   ),
+                // ),
+                //Text("${doc!.collectorId}"),
+
                 Flexible(
                   child: Container(
                     //color: Colors.amber,

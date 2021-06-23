@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -202,8 +203,7 @@ class _UploadProfileState extends State<UploadProfile> {
 
     print(widget.accountNumber);
     //String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
-    String uri =
-        'https://janakalyan-ag.herokuapp.com/api/agents/profile-upload';
+    String uri = '$janaklyan/api/agents/profile-upload';
 
     try {
       var res = await http.post(Uri.parse(uri), body: data, headers: {

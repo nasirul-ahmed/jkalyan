@@ -1,5 +1,9 @@
-import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
+import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
+import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class ApplyLoan extends StatefulWidget {
   static const id = 'ApplyLoan';
@@ -14,6 +18,43 @@ class _ApplyLoanState extends State<ApplyLoan> {
   TextEditingController _amount = TextEditingController();
 
   TextEditingController _accountNumber = TextEditingController();
+
+  Future<void> applyLoan() async {
+    showLoadingDialog(context);
+    final url = Uri.parse('$janaklyan/api/collector/apply-loan');
+
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String? token = _prefs.getString('token');
+    //"Authorization": "Bearer $token"
+    DateTime x = DateTime.now();
+    var body = jsonEncode({
+      "collectorId": _prefs.getInt('id'),
+      "depositAcNo": _accountNumber.text,
+      "loanAmount": _amount.text,
+      "createdAt": "${x.year}-${x.month}-${x.day}"
+    });
+    try {
+      var res = await http.post(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: body,
+      );
+      if (200 == res.statusCode) {
+        print(res.statusCode);
+        Navigator.pop(context);
+
+        successDialog(context);
+      } else {
+        Navigator.pop(context);
+        showErrorDialog(context);
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +142,6 @@ class _ApplyLoanState extends State<ApplyLoan> {
                 if (_key.currentState!.validate()) {
                   showD(context);
                   print('kkk');
-                  // Navigator.pushNamedAndRemoveUntil(
-                  //     context, DashBoard.id, (route) => false);
                 }
               },
               child: Container(
@@ -163,6 +202,7 @@ class _ApplyLoanState extends State<ApplyLoan> {
                   Navigator.pop(context);
                   // Navigator.pushNamedAndRemoveUntil(
                   //     context, DashBoard.id, (route) => false);
+                  applyLoan();
                 },
                 child: Container(
                   height: 30,

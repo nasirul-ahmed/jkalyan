@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/api_response.dart';
 import 'package:devbynasirulahmed/models/collector.dart';
 import 'package:http/http.dart' as http;
@@ -9,8 +10,7 @@ Future<ApiResponse<Collector>> getCollector() async {
   String? token = prefs.getString('token');
   int? id = prefs.getInt('collectorId');
 
-  Uri url = Uri.parse(
-      "https://sanchay-new.herokuapp.com/api/collector/get-collector-by-id");
+  Uri url = Uri.parse("$janaklyan/api/collector/get-collector-by-id");
 
   try {
     print(token);

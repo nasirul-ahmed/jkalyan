@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/transactions.dart';
-import 'package:devbynasirulahmed/widgets/drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,8 +14,7 @@ class TransactionsView extends StatefulWidget {
 class _TransactionsViewState extends State<TransactionsView> {
   Future<List<TransactionsModel>> getTnx() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    Uri url = Uri.parse(
-        "https://sanchay-new.herokuapp.com/api/collector/transactions");
+    Uri url = Uri.parse("$janaklyan/api/collector/transactions");
 
     var body = jsonEncode(<String, dynamic>{
       "id": _prefs.getInt('collectorId'),
@@ -46,7 +45,6 @@ class _TransactionsViewState extends State<TransactionsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text('Transactions'),
       ),

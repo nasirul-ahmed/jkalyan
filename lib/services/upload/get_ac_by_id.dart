@@ -1,12 +1,12 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Customer> getAcById(int createdId) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
-  String uri =
-      'https://sanchay-new.herokuapp.com/api/agents/customer/$createdId';
+  String uri = '$janaklyan/api/agents/customer/$createdId';
   final response = await http.get(
     Uri.parse(uri),
     headers: <String, String>{

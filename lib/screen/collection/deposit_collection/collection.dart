@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
+import 'package:devbynasirulahmed/screen/collection/loan_collection/loan_collection.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _CollectionDetailsState extends State<CollectionDetails> {
       //SharedPreferences _prefs = await SharedPreferences.getInstance();
 
       final body = jsonEncode(<String, dynamic>{
-        "amount": int.parse(_amount.text),
+        "amount": (int.parse(_amount.text)).abs(),
         "collectorId": collectorId,
         "accountNumber": widget.doc?.accountNumber,
         "id": prefs.getInt('collectorId'),
@@ -89,6 +90,28 @@ class _CollectionDetailsState extends State<CollectionDetails> {
         });
       }
     }
+  }
+
+  Future<void> showConfirmDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+          title: Text('Are you sure?'),
+          content: Text('Amount: ${_amount.text}'),
+          actions: [
+            MaterialButton(
+              onPressed: () {
+                Navigator.pop(context);
+                handlePress(context);
+              },
+              child: Text('Confirm'),
+            )
+          ],
+        );
+      },
+    );
   }
 
   Future<void> showLoadingDialog() {
@@ -140,10 +163,6 @@ class _CollectionDetailsState extends State<CollectionDetails> {
 
   @override
   Widget build(BuildContext context) {
-    // final ScreenArgument args =
-    //     ModalRoute.of(context)!.settings.arguments as ScreenArgument;
-    // print(args.customer?.name);
-
     DateTime? date;
     date = DateTime.parse(widget.doc!.createdAt!);
 
@@ -192,18 +211,20 @@ class _CollectionDetailsState extends State<CollectionDetails> {
               //   width: 100,
               //   child: Image( image: MemoryImage(profile))),
 
-              Container(
-                width: 80,
-                height: 80,
-                //child: Image.memory(profile),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: MemoryImage(profile),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: 80,
+              //   height: 80,
+              //   //child: Image.memory(profile),
+              //   decoration: BoxDecoration(
+              //     shape: BoxShape.circle,
+              //     image: profile.isEmpty
+              //         ? DecorationImage(
+              //             image: MemoryImage(profile),
+              //             fit: BoxFit.fill,
+              //           )
+              //         : null,
+              //   ),
+              // ),
               SizedBox(height: 10),
               // SizedBox(
               //   height: 10,
@@ -245,6 +266,33 @@ class _CollectionDetailsState extends State<CollectionDetails> {
                   ),
                 ),
               ),
+              SizedBox(height: 10),
+              widget.doc?.loanAccountNumber == 0 ||
+                      widget.doc?.loanAccountNumber == null
+                  ? Container()
+                  : InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    LoanCollection(widget.doc?.accountNumber)));
+                      },
+                      child: Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width - 20,
+                        color: Colors.grey,
+                        child: InkWell(
+                          child: Center(
+                            child: Text(
+                              "Loan Details Page",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
               SizedBox(
                 height: 10,
               ),
@@ -257,7 +305,7 @@ class _CollectionDetailsState extends State<CollectionDetails> {
                       borderRadius: BorderRadius.circular(30.0)),
                   width: MediaQuery.of(context).size.width,
                   child: MaterialButton(
-                    onPressed: () => handlePress(context),
+                    onPressed: () => showConfirmDialog(),
                     child: Text(
                       'Collect',
                       style: TextStyle(color: Colors.white, fontSize: 16),

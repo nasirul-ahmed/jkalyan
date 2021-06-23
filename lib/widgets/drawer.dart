@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/screen/account_register/account_register_view.dart';
 import 'package:devbynasirulahmed/screen/old_customers/old_viewer.dart';
+import 'package:devbynasirulahmed/screen/passbook/passbook.dart';
+import 'package:devbynasirulahmed/screen/tnx/loan_tnx.dart';
 import 'package:devbynasirulahmed/screen/tnx/transactions.dart';
-import 'package:devbynasirulahmed/screen/transafer_amount/deposit/deposit_transfer_view.dart';
+import 'package:devbynasirulahmed/screen/transafer_amount/deposit/transfer_deposit.dart';
+import 'package:devbynasirulahmed/screen/transafer_amount/loan/transfer_loan.dart';
 import 'package:devbynasirulahmed/screen/upload/reupload.dart';
-import 'package:devbynasirulahmed/screen/wallet/passbook.dart';
 import 'package:devbynasirulahmed/services/auth/logout.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -64,7 +68,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     super.initState();
     //_getCollector = getCollector();
     getEmail();
-    getTotalCustomers();
+    //getTotalCustomers();
   }
 
   @override
@@ -93,73 +97,192 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(color: Colors.white),
-              child: ListTile(
-                leading: Icon(
-                  Icons.book_rounded,
-                  color: Colors.green,
-                  size: 20,
-                ),
-                title: Text(
-                  'Passbook',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => PassBook()));
-                },
+            ExpansionTile(
+              leading: FaIcon(
+                Icons.find_replace_rounded,
+                size: 20,
+                color: Colors.green,
               ),
+              title: Text('Account'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.supervisor_account,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Passbook',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => PassBook()));
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Divider(
+                    height: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      leading: FaIcon(
+                        FontAwesomeIcons.book,
+                        color: Colors.green,
+                        size: 16,
+                      ),
+                      title: Text(
+                        'Account Register',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => AccountRegisterView()));
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ExpansionTile(
+              leading: FaIcon(
+                Icons.history,
+                size: 20,
+                color: Colors.green,
+              ),
+              title: Text('Transfer History'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.swap_vert_circle,
+                        color: Colors.green,
+                        size: 18,
+                      ),
+                      title: Text(
+                        'Deposit History',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(context, TransferDeposit.id);
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Divider(
+                    height: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.swap_vert_circle,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Loan Deposit History',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        // Update the state of the app.
+                        // ...
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => TransferLoan(),
+                            ));
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ExpansionTile(
+              leading: FaIcon(
+                Icons.history,
+                size: 20,
+                color: Colors.green,
+              ),
+              title: Text('Transaction History'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      leading: FaIcon(
+                        Icons.pending_actions,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Tnx History',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(context, TransactionsView.id);
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      leading: FaIcon(
+                        Icons.pending_actions,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Loan Tnx History',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => LoanTransactionsView()));
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
             Container(
               decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
-                leading: Icon(
-                  Icons.pending_actions,
-                  color: Colors.green,
-                  size: 20,
-                ),
-                title: Text(
-                  'Deposits History',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                ),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                  Navigator.pushNamed(context, DepositTransferView.id);
-                },
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(color: Colors.white),
-              child: ListTile(
-                leading: Icon(
-                  Icons.pending_actions,
-                  color: Colors.green,
-                  size: 20,
-                ),
-                title: Text(
-                  'Transaction History',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                ),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                  Navigator.pushNamed(context, TransactionsView.id);
-                },
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(color: Colors.white),
-              child: ListTile(
-                leading: Icon(
-                  Icons.person_outline,
+                leading: FaIcon(
+                  Icons.person_pin_sharp,
                   color: Colors.green,
                   size: 20,
                 ),
                 title: Text(
                   'Closed A/c ($totalCustomer)',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 onTap: () {
                   // Update the state of the app.
@@ -172,14 +295,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
             Container(
               decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
-                leading: Icon(
+                leading: FaIcon(
                   Icons.upload_file,
                   color: Colors.green,
                   size: 20,
                 ),
                 title: Text(
                   'Upload',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 onTap: () {
                   // Update the state of the app.
@@ -190,9 +313,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20),
-              child: Divider(
-                height: 1,
-                color: Colors.black,
+              child: Opacity(
+                opacity: 0.5,
+                child: Divider(
+                  height: 1,
+                  color: Colors.black,
+                ),
               ),
             ),
             Container(
@@ -208,6 +334,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     fontSize: 16,
                     color: Colors.red,
                     letterSpacing: 1.2,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -218,8 +345,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey[400],
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
           ],
         ),

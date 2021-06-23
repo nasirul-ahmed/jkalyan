@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Future<void> showErrorDialog(BuildContext context) {
   return showDialog(
@@ -17,6 +20,40 @@ Future<void> showErrorDialog(BuildContext context) {
             ],
             content: Text('Something wrong'));
       });
+}
+
+Future<void> successDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) {
+      return AlertDialog(
+        content: SizedBox(
+          height: 100,
+          width: MediaQuery.of(context).size.width - 20,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FaIcon(FontAwesomeIcons.checkCircle),
+              SizedBox(
+                height: 10,
+              ),
+              Text('Success'),
+            ],
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            onPressed: () {
+              Navigator.pop(context);
+              //callback!();
+            },
+            child: Text('Ok'),
+          )
+        ],
+      );
+    },
+  );
 }
 
 Future<void> showLoadingDialog(BuildContext context) {

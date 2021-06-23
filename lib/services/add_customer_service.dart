@@ -1,36 +1,38 @@
 import 'dart:convert';
 
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Customer> createCustomer(
-    int accountNumber,
-    String name,
-    String fatherName,
-    String address,
-    int pinCode,
-    int phone,
-    String occupation,
-    String age,
-    String nomineeName,
-    String nomineeAddress,
-    int nomineePhone,
-    String relation,
-    String nomineeFatherName,
-    String createdAt,
-    int rateOfInterest,
-    int totalInstallments,
-    int installmentAmount,
-    int totalPrincipalAmount,
-    double totalInterestAmount,
-    double totalMaturityAmount,
-    String maturityDate,
-    String accountType,
-    int nomineeAge,
-    int depositAmount) async {
+  int accountNumber,
+  String name,
+  String fatherName,
+  String address,
+  int pinCode,
+  int phone,
+  String occupation,
+  String age,
+  String nomineeName,
+  String nomineeAddress,
+  int nomineePhone,
+  String relation,
+  String nomineeFatherName,
+  String createdAt,
+  //int rateOfInterest,
+  int totalInstallments,
+  int installmentAmount,
+  int totalPrincipalAmount,
+  // double totalInterestAmount,
+  double totalMaturityAmount,
+  String maturityDate,
+  String accountType,
+  int nomineeAge,
+  //int depositAmount,
+) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
-  String uri = 'https://sanchay-new.herokuapp.com/api/agents/customer/create';
+  String uri = '$janaklyan/api/collector/customer/create';
   final response = await http.post(
     Uri.parse(uri),
     headers: <String, String>{
@@ -54,23 +56,20 @@ Future<Customer> createCustomer(
       'nomineeFatherName': nomineeFatherName,
       'nomineeAge': nomineeAge,
       'createdAt': createdAt,
-      //'rateOfInterest': rateOfInterest,
       'totalInstallments': totalInstallments,
       'installmentAmount': installmentAmount,
       'totalPrincipalAmount': totalPrincipalAmount,
-      'totalInterestAmount': totalInterestAmount,
       'totalMaturityAmount': totalMaturityAmount,
       'maturityDate': maturityDate,
       'agentUid': _prefs.getInt("collectorId"),
       "accountType": accountType,
-      //'totalCollection': depositAmount
     }),
   );
 
   if (response.statusCode == 200) {
     print('success added' + response.body.toString());
     var jsonData = jsonDecode(response.body);
-    return Customer.fromJson(jsonData);
+    return Customer.fromJson(jsonData[0]);
   } else {
     print(response.statusCode);
     throw Exception('wrong');

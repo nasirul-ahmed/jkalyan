@@ -7,48 +7,21 @@ import 'package:devbynasirulahmed/screen/edit_customer/depost/edit_deposit_custo
 import 'package:devbynasirulahmed/screen/edit_customer/depost/search_deposit.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 import 'package:devbynasirulahmed/screen/login/login.dart';
+import 'package:devbynasirulahmed/screen/passbook/passbook_customer.dart';
 import 'package:devbynasirulahmed/screen/tnx/transactions.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/deposit/deposit_transfer_view.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/deposit/transfer_deposit.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/loan/transfer_loan_view.dart';
 import 'package:devbynasirulahmed/screen/upload/reupload.dart';
-import 'package:devbynasirulahmed/services/providers/auth_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-// final authProvider = StateProvider<bool>((ref) {
-//   bool isLogged = false;
-//   return isLogged;
-// });
+import 'package:flutter/material.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Index extends StatelessWidget {
   const Index({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // bool isLogged = Provider.of(context);
-    // return isLogged
-    //     ? Scaffold(
-    //         body: Center(
-    //           child: DashBoard(),
-    //         ),
-    //       )
-    //     : Scaffold(
-    //         body: Login(),
-    //       );
-    // return ChangeNotifierProvider(
-    //   create: (_) => AuthNotifier(),
-    //   child: MaterialApp(
-    //     home: Consumer<AuthNotifier>(
-    //       builder: (_, auth, __) {
-    //         if (auth.loggedIn) return DashBoard();
-    //         return Login();
-    //       },
-    //     ),
-    //     //routes: ,
-    //   ),
-    // );
-
     return MaterialApp(
       home: Splash(),
       //initialRoute: '/splash',
@@ -65,6 +38,7 @@ class Index extends StatelessWidget {
         DepositTransferView.id: (_) => DepositTransferView(),
         TransferLoanView.id: (_) => TransferLoanView(),
         ApplyLoan.id: (_) => ApplyLoan(),
+        //PassbookCustomer.id:(_)=> PassbookCustomer(doc)
       },
     );
   }

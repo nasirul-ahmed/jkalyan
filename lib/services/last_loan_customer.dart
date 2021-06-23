@@ -1,12 +1,12 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/api_response.dart';
 import 'package:devbynasirulahmed/models/loan_customer.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LastLoanCustomerAddedService {
-  Uri url =
-      Uri.parse("https://sanchay-new.herokuapp.com/api/agents/loan-account");
+  Uri url = Uri.parse("$janaklyan/api/agents/loan-account");
   static const headers = {"Accept": "application/json"};
   Future<ApiResponse<LoanCustomer>> getLastCustomer() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();

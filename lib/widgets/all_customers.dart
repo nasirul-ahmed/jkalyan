@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/services/customer_service.dart';
 import 'package:devbynasirulahmed/widgets/max_width_container.dart';
@@ -15,8 +16,7 @@ class AllCustomers extends StatefulWidget {
 
 class _AllCustomersState extends State<AllCustomers> {
   Future<List<Customer>> getCustomer() async {
-    final url =
-        Uri.parse('https://sanchay-new.herokuapp.com/api/agents/customers');
+    final url = Uri.parse('$janaklyan/api/agents/customers');
 
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String? token = _prefs.getString('token');
@@ -38,7 +38,7 @@ class _AllCustomersState extends State<AllCustomers> {
       }
       return List<Customer>.empty();
     } catch (e) {
-      throw e;
+      throw Exception(e);
     }
   }
 

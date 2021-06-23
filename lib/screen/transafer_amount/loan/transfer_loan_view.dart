@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/deposit_tnx.dart';
+import 'package:devbynasirulahmed/screen/transafer_amount/loan/transfer_loan.dart';
+import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +14,15 @@ class TransferLoanView extends StatefulWidget {
 }
 
 class _TransferLoanViewState extends State<TransferLoanView> {
+  num? totalLoanCollection;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCollector();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screen = MediaQuery.of(context).size;
@@ -49,7 +61,9 @@ class _TransferLoanViewState extends State<TransferLoanView> {
                         height: 10,
                       ),
                       Text(
-                        '00.00',
+                        totalLoanCollection == null
+                            ? "0"
+                            : '$totalLoanCollection',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -87,7 +101,10 @@ class _TransferLoanViewState extends State<TransferLoanView> {
               height: 40,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => TransferLoan()));
+              },
               child: Container(
                 height: 50,
                 width: screen.width - 40,
@@ -115,7 +132,33 @@ class _TransferLoanViewState extends State<TransferLoanView> {
               height: 20,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                if (totalLoanCollection != 0) {
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return AlertDialog(
+                          title: Text('Do you want to proceed?'),
+                          actions: [
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancel'),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                sendMoney();
+                              },
+                              child: Text('Procced'),
+                            )
+                          ],
+                        );
+                      });
+                } else {
+                  return null;
+                }
+              },
               child: Container(
                 height: 50,
                 width: screen.width - 40,
@@ -144,5 +187,77 @@ class _TransferLoanViewState extends State<TransferLoanView> {
         ),
       ),
     );
+  }
+
+  Future<void> sendMoney() async {
+    Navigator.pop(context);
+    showLoadingDialog(context);
+    DateTime date = DateTime.now();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    int? id = prefs.getInt('collectorId');
+
+    Uri url = Uri.parse("$janaklyan/api/collector/create/loan-deposits/tnx");
+
+    try {
+      print(token);
+      print(id);
+      var res = await http.post(
+        url,
+        body: jsonEncode(<String, dynamic>{
+          "collectorId": id,
+          "date": "${date.year}-${date.month}-${date.day}"
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (200 == res.statusCode) {
+        var jsonData = jsonDecode(res.body);
+        Navigator.pop(context);
+        print(jsonData);
+        successDialog(context);
+      } else {
+        Navigator.pop(context);
+        showErrorDialog(context);
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> getCollector() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    int? id = prefs.getInt('collectorId');
+
+    Uri url = Uri.parse("$janaklyan/api/collector/get-collector-by-id");
+
+    try {
+      print(token);
+      print(id);
+      var res = await http.post(
+        url,
+        body: jsonEncode(<String, dynamic>{"id": id}),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (200 == res.statusCode) {
+        var jsonData = jsonDecode(res.body);
+        print(jsonData);
+        setState(() {
+          totalLoanCollection = jsonData[0]['totalLoanCollection'] ?? 0;
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

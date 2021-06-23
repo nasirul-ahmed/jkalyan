@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:devbynasirulahmed/models/customer.dart';
-import 'package:devbynasirulahmed/screen/add_customer/review_add_customer.dart';
 import 'package:devbynasirulahmed/screen/add_customer/review_mobile.dart';
 import 'package:devbynasirulahmed/widgets/customTextField.dart';
 import 'package:flutter/material.dart';
@@ -166,21 +164,11 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                 SizedBox(
                   height: 8,
                 ),
-                // customTextField(
-                //     'Rate of Interst', TextInputType.number, rateOfInterest),
-                // SizedBox(
-                //   height: 8,
-                // ),
                 customTextField('Installment Amounts', TextInputType.number,
                     installmentAmount),
                 SizedBox(
                   height: 8,
                 ),
-                // customTextField(
-                //     'Deposit Amount', TextInputType.number, depositAmount),
-                // SizedBox(
-                //   height: 8,
-                // ),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: DropdownButtonFormField<String>(
@@ -285,10 +273,10 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                           // int totalPrincipalAmount =
                           //     (int.parse(totalInstallments.text.trim()) *
                           //         int.parse(installmentAmount.text.trim()));
-                          double totalInterestAmount = totalPrincipalAmount *
-                              (int.parse(rateOfInterest.text) / 100);
+                          // double totalInterestAmount = totalPrincipalAmount *
+                          //     (int.parse(rateOfInterest.text) / 100);
                           double totalMaturityAmount =
-                              totalPrincipalAmount + totalInterestAmount;
+                              double.parse(totalPrincipalAmount.toString());
 
                           // String createdAt =
                           //     "${creationDate.year}-${creationDate.month}-${creationDate.day}";
@@ -313,18 +301,18 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                                 relation.text,
                                 nomineeFatherName.text,
                                 int.parse(nomineeAge.text),
-                                int.parse(rateOfInterest.text),
+                                //int.parse(rateOfInterest.text),
                                 totalInstallments,
                                 int.parse(installmentAmount.text),
                                 maturityDate,
                                 totalPrincipalAmount,
-                                totalInterestAmount,
+                                //totalInterestAmount,
                                 totalMaturityAmount,
                                 int.parse(phone.text),
                                 accountType,
                                 age.text,
                                 createdAt,
-                                int.parse(depositAmount.text),
+                                //int.parse(depositAmount.text),
                               ),
                             ),
                           );

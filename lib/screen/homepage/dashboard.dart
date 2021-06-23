@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/homepage/mobile_view_dashboard.dart';
 import 'package:devbynasirulahmed/widgets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,10 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  int regularAmount = 0;
-  int loanAmount = 0;
-  int totalCustomers = 0;
-  int totalLoanCustomers = 0;
+  int? regularAmount;
+  int? loanAmount;
+  int? totalCustomers;
+  int? totalLoanCustomers;
   DateTime getDate = DateTime.now();
 
   getBalance() async {
@@ -24,8 +25,7 @@ class _DashBoardState extends State<DashBoard> {
     String? token = prefs.getString('token');
     int? id = prefs.getInt('collectorId');
 
-    Uri url = Uri.parse(
-        "https://sanchay-new.herokuapp.com/api/collector/todays-deposit-collection");
+    Uri url = Uri.parse("$janaklyan/api/collector/todays-deposit-collection");
 
     try {
       print("${getDate.year}-${getDate.month}-${getDate.day}");
@@ -47,7 +47,7 @@ class _DashBoardState extends State<DashBoard> {
 
         print(jsonData.toString());
         setState(() {
-          regularAmount = jsonData['sum(amount)'] ?? 0;
+          regularAmount = jsonData['todaysCollection'];
         });
 
         return jsonData;
@@ -62,8 +62,8 @@ class _DashBoardState extends State<DashBoard> {
     String? token = prefs.getString('token');
     int? id = prefs.getInt('collectorId');
 
-    Uri url = Uri.parse(
-        "https://sanchay-new.herokuapp.com/api/collector/loan/todays-deposit-collection");
+    Uri url =
+        Uri.parse("$janaklyan/api/collector/loan/todays-deposit-collection");
 
     try {
       print(token);
@@ -83,9 +83,9 @@ class _DashBoardState extends State<DashBoard> {
       if (200 == res.statusCode) {
         var jsonData = jsonDecode(res.body);
 
-        print(jsonData[0].toString());
+        print(jsonData.toString());
         setState(() {
-          regularAmount = jsonData['sum(amount)'];
+          loanAmount = jsonData['todaysLoanCollection'];
         });
 
         return jsonData;
@@ -98,13 +98,10 @@ class _DashBoardState extends State<DashBoard> {
   totalCustomer() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final url = Uri.parse(
-        'https://sanchay-new.herokuapp.com/api/total/customers/${_prefs.getInt('collectorId')}');
-
-    var body = jsonEncode({
-      "id": _prefs.getInt('collectorId'),
-    });
+        '$janaklyan/api/collector/total/customers/${_prefs.getInt('collectorId')}');
 
     try {
+      print(_prefs.getInt('collectorId'));
       var res = await http.get(url, headers: {
         "Content-Type": "application/json",
         'Accept': "*/*",
@@ -113,7 +110,7 @@ class _DashBoardState extends State<DashBoard> {
       if (200 == res.statusCode) {
         var jsondata = jsonDecode(res.body);
         setState(() {
-          totalCustomers = jsondata['count(id)'];
+          totalCustomers = jsondata['totalCustomers'];
         });
       }
     } catch (e) {
@@ -136,6 +133,7 @@ class _DashBoardState extends State<DashBoard> {
       extendBodyBehindAppBar: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          totalCustomer();
           getBalance();
           getLoanBalance();
         },
@@ -152,7 +150,7 @@ class _DashBoardState extends State<DashBoard> {
       body: Column(
         children: [
           SizedBox(
-            height: 8,
+            height: 5,
           ),
           mobileViewDashboard(context, regularAmount, loanAmount,
               totalCustomers, totalLoanCustomers)

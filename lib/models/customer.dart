@@ -4,44 +4,42 @@
 
 import 'dart:convert';
 
-import 'dart:typed_data';
-
 Customer customerFromJson(String str) => Customer.fromJson(json.decode(str));
 
 String customerToJson(Customer data) => json.encode(data.toJson());
 
 class Customer {
-  Customer({
-    this.id,
-    this.accountNumber,
-    this.name,
-    this.fatherName,
-    this.address,
-    this.pinCode,
-    this.occupation,
-    this.nomineeName,
-    this.nomineeAddress,
-    this.nomineePhone,
-    this.relation,
-    this.nomineeFatherName,
-    this.rateOfInterest,
-    this.totalInstallments,
-    this.installmentAmount,
-    this.maturityDate,
-    this.totalPrincipalAmount,
-    this.totalInterestAmount,
-    this.totalMaturityAmount,
-    this.agentUid,
-    this.createdAt,
-    this.phone,
-    this.age,
-    this.accountType,
-    this.profile,
-    this.signature,
-    this.totalCollection,
-    this.nomineeAge,
-    this.isActive,
-  });
+  Customer(
+      {this.id,
+      this.accountNumber,
+      this.name,
+      this.fatherName,
+      this.address,
+      this.pinCode,
+      this.occupation,
+      this.nomineeName,
+      this.nomineeAddress,
+      this.nomineePhone,
+      this.relation,
+      this.nomineeFatherName,
+      this.rateOfInterest,
+      this.totalInstallments,
+      this.installmentAmount,
+      this.maturityDate,
+      this.totalPrincipalAmount,
+      this.totalInterestAmount,
+      this.totalMaturityAmount,
+      this.agentUid,
+      this.createdAt,
+      this.phone,
+      this.age,
+      this.accountType,
+      this.profile,
+      this.signature,
+      this.totalCollection,
+      this.nomineeAge,
+      this.isActive,
+      this.loanAccountNumber});
 
   int? id;
   int? accountNumber;
@@ -59,9 +57,9 @@ class Customer {
   int? totalInstallments;
   int? installmentAmount;
   String? maturityDate;
-  int? totalPrincipalAmount;
-  int? totalInterestAmount;
-  int? totalMaturityAmount;
+  num? totalPrincipalAmount;
+  num? totalInterestAmount;
+  num? totalMaturityAmount;
   int? agentUid;
   String? createdAt;
   int? phone;
@@ -70,8 +68,9 @@ class Customer {
   String? accountType;
   String? profile;
   String? signature;
-  int? totalCollection;
+  num? totalCollection;
   int? isActive;
+  int? loanAccountNumber;
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         id: json["id"],
@@ -103,6 +102,7 @@ class Customer {
         signature: json["signature"],
         totalCollection: json["totalCollection"],
         isActive: json["isActive"],
+        loanAccountNumber: json["loanAccountNumber"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -135,5 +135,6 @@ class Customer {
         "signature": signature,
         "totalCollection": totalCollection,
         "isActive": isActive,
+        "loanAccountNumber": loanAccountNumber
       };
 }

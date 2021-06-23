@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'package:devbynasirulahmed/models/deposit_tnx.dart';
+import 'package:devbynasirulahmed/constants/api_url.dart';
+import 'package:devbynasirulahmed/screen/transafer_amount/deposit/transfer_deposit.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'package:font_awesome_flutter_example/icons.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DepositTransferView extends StatefulWidget {
   static final id = "DepositTransferView";
@@ -12,6 +13,15 @@ class DepositTransferView extends StatefulWidget {
 }
 
 class _DepositTransferViewState extends State<DepositTransferView> {
+  num? totalCollection;
+  //bool isS = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getCollector();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screen = MediaQuery.of(context).size;
@@ -50,7 +60,7 @@ class _DepositTransferViewState extends State<DepositTransferView> {
                         height: 10,
                       ),
                       Text(
-                        '00.00',
+                        totalCollection == null ? '0' : '$totalCollection',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -88,7 +98,10 @@ class _DepositTransferViewState extends State<DepositTransferView> {
               height: 40,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => TransferDeposit()));
+              },
               child: Container(
                 height: 50,
                 width: screen.width - 40,
@@ -119,7 +132,33 @@ class _DepositTransferViewState extends State<DepositTransferView> {
               height: 20,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                if (totalCollection != 0) {
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return AlertDialog(
+                          title: Text('Do you want to proceed?'),
+                          actions: [
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancel'),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                sendMoney();
+                              },
+                              child: Text('Procced'),
+                            )
+                          ],
+                        );
+                      });
+                } else {
+                  return null;
+                }
+              },
               child: Container(
                 height: 50,
                 width: screen.width - 40,
@@ -148,5 +187,156 @@ class _DepositTransferViewState extends State<DepositTransferView> {
         ),
       ),
     );
+  }
+
+  Future<void> showLoadingDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 200,
+            width: MediaQuery.of(context).size.width - 20,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Loading...'),
+                SizedBox(
+                  height: 30,
+                ),
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.blue),
+                  strokeWidth: 5.0,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> successDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width - 20,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FaIcon(FontAwesomeIcons.checkCircle),
+                SizedBox(
+                  height: 10,
+                ),
+                Text('Success'),
+              ],
+            ),
+          ),
+          actions: [
+            MaterialButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Ok'),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showErrorDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+            title: Text('Error'),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Ok'),
+              )
+            ],
+            content: Text('Something wrong'));
+      },
+    );
+  }
+
+  Future<void> sendMoney() async {
+    Navigator.pop(context);
+    showLoadingDialog();
+    DateTime date = DateTime.now();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    int? id = prefs.getInt('collectorId');
+
+    Uri url = Uri.parse("$janaklyan/api/collector/create/deposit/tnx");
+
+    try {
+      print(token);
+      print(id);
+      var res = await http.post(
+        url,
+        body: jsonEncode(<String, dynamic>{
+          "collectorId": id,
+          "date": "${date.year}-${date.month}-${date.day}"
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (200 == res.statusCode) {
+        var jsonData = jsonDecode(res.body);
+        Navigator.pop(context);
+        print(jsonData);
+        successDialog();
+      } else {
+        Navigator.pop(context);
+        showErrorDialog();
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> getCollector() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    int? id = prefs.getInt('collectorId');
+
+    Uri url = Uri.parse("$janaklyan/api/collector/get-collector-by-id");
+
+    try {
+      print(token);
+      print(id);
+      var res = await http.post(
+        url,
+        body: jsonEncode(<String, dynamic>{"id": id}),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (200 == res.statusCode) {
+        var jsonData = jsonDecode(res.body);
+        print(jsonData);
+        setState(() {
+          totalCollection = jsonData[0]['totalCollection'] ?? 0;
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

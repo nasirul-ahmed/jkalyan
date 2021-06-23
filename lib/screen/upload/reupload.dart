@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -198,7 +199,7 @@ class _ReUploadProfileState extends State<ReUploadProfile> {
       "id": _prefs.getInt('collectorId')
     });
 
-    String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
+    String uri = '$janaklyan/profile-upload';
     //String uri = 'https://sanchay-new.herokuapp.com/profile-upload';
 
     try {
