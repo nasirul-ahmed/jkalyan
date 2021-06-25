@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 import 'package:devbynasirulahmed/services/providers/auth_provider.dart';
+import 'package:devbynasirulahmed/widgets/responsive_layout.dart';
 import 'package:devbynasirulahmed/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -25,7 +27,7 @@ class _LoginState extends State<Login> {
     });
     SharedPreferences pref = await SharedPreferences.getInstance();
     print("hello");
-    const url = "https://sanchay-new.herokuapp.com/api/collector/login";
+    const url = "$janaklyan/api/collector/login";
     //const url = "https://janakalyan-ag.herokuapp.com/api/collector/login";
 
     try {

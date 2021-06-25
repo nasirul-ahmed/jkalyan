@@ -1,9 +1,3 @@
-// id int(11) AI PK
-// collector int(11)
-// amount int(11)
-// createdAt date
-// loanAccountNumber int(11)
-
 class LoanTransactionsModel {
   LoanTransactionsModel(
       {this.id,
