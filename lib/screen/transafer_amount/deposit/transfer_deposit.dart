@@ -76,8 +76,7 @@ class _TransferDepositState extends State<TransferDeposit> {
                       return ListView.builder(
                         //controller: _scrollController,
                         //shrinkWrap: true,
-                        itemCount:
-                            snap.data!.length < 10 ? snap.data!.length : 10,
+                        itemCount: snap.data!.length,
                         itemBuilder: (_, i) {
                           return customViews(snap.data?[i]);
                         },

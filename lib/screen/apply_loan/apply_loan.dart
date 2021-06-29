@@ -140,8 +140,7 @@ class _ApplyLoanState extends State<ApplyLoan> {
             InkWell(
               onTap: () {
                 if (_key.currentState!.validate()) {
-                  showD(context);
-                  print('kkk');
+                  applyLoan();
                 }
               },
               child: Container(
