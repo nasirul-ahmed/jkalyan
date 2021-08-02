@@ -15,6 +15,8 @@ class DepositTransferView extends StatefulWidget {
 class _DepositTransferViewState extends State<DepositTransferView> {
   num? totalCollection;
   //bool isS = false;
+  TextEditingController _amount = TextEditingController();
+  final _key = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -26,6 +28,7 @@ class _DepositTransferViewState extends State<DepositTransferView> {
   Widget build(BuildContext context) {
     var screen = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text('Deposit Transfer'),
@@ -72,6 +75,57 @@ class _DepositTransferViewState extends State<DepositTransferView> {
                       ),
                     ],
                   ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15),
+              child: Form(
+                key: _key,
+                child: TextFormField(
+                  style: TextStyle(fontSize: 20),
+                  controller: _amount,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return "Should not be empty!";
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    errorStyle: TextStyle(color: Colors.black, fontSize: 10),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 2),
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 2),
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    contentPadding: EdgeInsets.only(left: 10),
+                    hintText: 'Enter Amount',
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.grey),
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
+                  ),
+                  textAlign: TextAlign.center,
+                  // decoration: InputDecoration(
+                  //   contentPadding: EdgeInsets.only(left: 10),
+                  //   hintText: 'Enter Recovery Amount',
+
+                  //   // focusedBorder: OutlineInputBorder(
+                  //   //   borderSide: BorderSide(color: Colors.grey),
+                  //   //   borderRadius: BorderRadius.circular(10),
+                  //   // ),
+                  // ),
                 ),
               ),
             ),
@@ -138,7 +192,14 @@ class _DepositTransferViewState extends State<DepositTransferView> {
                       context: context,
                       builder: (_) {
                         return AlertDialog(
-                          title: Text('Do you want to proceed?'),
+                          title: Text(
+                            'Do you want to proceed?',
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                          content: Text(
+                            'Amount : ${_amount.text}',
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
                           actions: [
                             MaterialButton(
                               onPressed: () {
@@ -148,7 +209,9 @@ class _DepositTransferViewState extends State<DepositTransferView> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                sendMoney();
+                                if (_key.currentState!.validate()) {
+                                  sendMoney(int.parse(_amount.text).abs());
+                                }
                               },
                               child: Text('Procced'),
                             )
@@ -268,7 +331,7 @@ class _DepositTransferViewState extends State<DepositTransferView> {
     );
   }
 
-  Future<void> sendMoney() async {
+  Future<void> sendMoney(int amount) async {
     Navigator.pop(context);
     showLoadingDialog();
     DateTime date = DateTime.now();
@@ -284,6 +347,7 @@ class _DepositTransferViewState extends State<DepositTransferView> {
       var res = await http.post(
         url,
         body: jsonEncode(<String, dynamic>{
+          "amount": amount,
           "collectorId": id,
           "date": "${date.year}-${date.month}-${date.day}"
         }),

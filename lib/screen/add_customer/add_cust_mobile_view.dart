@@ -267,8 +267,11 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
                             });
                           }
 
-                          maturityDate =
-                              '${mDate!.year}-${mDate!.month}-${mDate!.day} ';
+                          maturityDate = DateTime.now()
+                              .add(Duration(days: 630))
+                              .toString()
+                              .split(" ")[0];
+                          //'${mDate!.year}-${mDate!.month}-${mDate!.day} ';
 
                           // int totalPrincipalAmount =
                           //     (int.parse(totalInstallments.text.trim()) *

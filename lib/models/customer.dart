@@ -60,7 +60,7 @@ class Customer {
   num? totalPrincipalAmount;
   num? totalInterestAmount;
   num? totalMaturityAmount;
-  int? agentUid;
+  String? agentUid;
   String? createdAt;
   int? phone;
   int? age;

@@ -1,6 +1,7 @@
 import 'package:devbynasirulahmed/models/api_response.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/screen/add_customer/editable_details_mobile.dart';
+import 'package:devbynasirulahmed/screen/upload/upload_docs.dart';
 import 'package:devbynasirulahmed/screen/upload/upload_profile.dart';
 import 'package:devbynasirulahmed/services/add_customer_service.dart';
 import 'package:devbynasirulahmed/services/last_customer.dart';
@@ -177,7 +178,7 @@ class _ReviewMobileState extends State<ReviewMobile> {
                       'Total Installments', widget.totalInstallments),
                   EditableDetailsMobile(
                       'Installment Amount', widget.installmentAmount),
-                  EditableDetailsMobile('Maturity Date', widget.maturityDate),
+
                   EditableDetailsMobile(
                       'Principal Amount', widget.totalPrincipalAmount),
                   // EditableDetailsMobile(
@@ -187,6 +188,7 @@ class _ReviewMobileState extends State<ReviewMobile> {
                   EditableDetailsMobile('Age', widget.age),
                   EditableDetailsMobile('Account Type', widget.accountType),
                   EditableDetailsMobile('Created At', widget.createdAt),
+                  EditableDetailsMobile('Maturity Date', widget.maturityDate),
                   //EditableDetailsMobile('First Deposit', widget.depositAmount),
                   SizedBox(height: 30),
                   Padding(
@@ -235,7 +237,6 @@ class _ReviewMobileState extends State<ReviewMobile> {
                                 widget.relation,
                                 widget.nomineeFatherName,
                                 widget.createdAt,
-                                //widget.rateOfInterest,
                                 widget.totalInstallments,
                                 widget.installmentAmount,
                                 widget.totalPrincipalAmount,
@@ -262,17 +263,11 @@ class _ReviewMobileState extends State<ReviewMobile> {
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        UploadProfile(customer.accountNumber),
+                                    builder: (context) => UploadDocs(
+                                      accountNumber: customer.accountNumber,
+                                    ),
                                   ),
                                   (route) => false);
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         UploadProfile((customer.accountNumber)),
-                              //   ),
-                              // );
                             },
                             child: Text(
                               'Submit',

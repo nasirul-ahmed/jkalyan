@@ -22,8 +22,7 @@ class PassbookCustomer extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+            Card(
               child: Container(
                 //padding: EdgeInsets.only(left: 10, right: 10),
                 height: 100,
@@ -34,11 +33,30 @@ class PassbookCustomer extends StatelessWidget {
                   children: [
                     Text(
                       'Name :  ${doc!.name}',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     Text(
                       'Account Number :  ${doc!.accountNumber}',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Collector Code :  ${doc!.agentUid}',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -78,39 +96,49 @@ class PassbookCustomer extends StatelessWidget {
 
   SingleChildScrollView renderDatatable(List<TransactionsModel>? list) {
     TextStyle style = TextStyle(color: Colors.black, fontSize: 12);
-    TextStyle style1 = TextStyle(color: Colors.black, fontSize: 14);
+    TextStyle style1 = TextStyle(color: Colors.black, fontSize: 12);
     return SingleChildScrollView(
-      child: DataTable(
-          columns: [
-            DataColumn(label: Text('Date', style: style1)),
-            DataColumn(label: Text('Amount Rs', style: style1)),
-            DataColumn(label: Text('Collector', style: style1)),
-          ],
-          rows: list!
-              .map((TransactionsModel document) => DataRow(cells: [
-                    DataCell(Text(
-                      '${document.date?.split("T").first}',
-                      style: style,
-                    )),
-                    DataCell(Text(
-                      '${document.amount}',
-                      style: style,
-                    )),
-                    DataCell(Text(
-                      '${document.collector}',
-                      style: style,
-                    )),
-                  ]))
-              .toList()),
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+            columns: [
+              DataColumn(label: Text('C.Id', style: style1)),
+              DataColumn(label: Text('Date', style: style1)),
+              DataColumn(label: Text('Daily Collection', style: style1)),
+              DataColumn(label: Text('Total Collection', style: style1)),
+            ],
+            rows: list!
+                .map((TransactionsModel document) => DataRow(cells: [
+                      DataCell(Text(
+                        '${document.id}',
+                        style: style,
+                      )),
+                      DataCell(Text(
+                        '${document.date?.split("T").first}',
+                        style: style,
+                      )),
+                      DataCell(Text(
+                        '${document.amount}',
+                        style: style,
+                      )),
+                      DataCell(Text(
+                        '${document.totalCollection}',
+                        style: style,
+                      )),
+                    ]))
+                .toList()),
+      ),
     );
   }
 
   Future<List<TransactionsModel>> getTransactions() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    Uri url = Uri.parse("$janaklyan/api/collector/transactions");
+    Uri url = Uri.parse("$janaklyan/api/collector/transactions-by-ac");
 
     var body = jsonEncode(<String, dynamic>{
       "id": _prefs.getInt('collectorId'),
+      "accountNumber": doc!.accountNumber
     });
     print(_prefs.getInt('collectorId').toString());
     print(_prefs.getString('token'));

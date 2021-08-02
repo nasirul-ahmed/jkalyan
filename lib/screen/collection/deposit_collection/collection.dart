@@ -6,6 +6,7 @@ import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/screen/collection/loan_collection/loan_collection.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
+import 'package:devbynasirulahmed/screen/passbook/passbook_customer.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -63,8 +64,11 @@ class _CollectionDetailsState extends State<CollectionDetails> {
         );
 
         if (200 == res.statusCode) {
-          print("Money collected");
           Navigator.pop(context);
+          var parsed = jsonDecode(res.body);
+          print(parsed['insertId'].toString());
+          print("Money collected");
+
           Fluttertoast.showToast(
               msg: "Money collected",
               toastLength: Toast.LENGTH_SHORT,
@@ -73,8 +77,7 @@ class _CollectionDetailsState extends State<CollectionDetails> {
               backgroundColor: Colors.black,
               textColor: Colors.white,
               fontSize: 16.0);
-          Navigator.pushNamedAndRemoveUntil(
-              context, DashBoard.id, (route) => false);
+          successCollectionDialog(parsed['insertId']);
         } else {
           Navigator.pop(context);
           showErrorDialog();
@@ -92,21 +95,78 @@ class _CollectionDetailsState extends State<CollectionDetails> {
     }
   }
 
+  Future<void> successCollectionDialog(int? tnxId) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+          backgroundColor: Colors.green,
+          title: Text(
+            'Money Collected.',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            'Transaction Id: $tnxId',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            MaterialButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, DashBoard.id, (route) => false);
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25)),
+                child: Text(
+                  '  ok  ',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> showConfirmDialog() {
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
-          title: Text('Are you sure?'),
-          content: Text('Amount: ${_amount.text}'),
+          backgroundColor: Colors.green,
+          title: Text(
+            'Are you sure?',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            'Amount: ${_amount.text}',
+            style: TextStyle(color: Colors.white),
+          ),
           actions: [
             MaterialButton(
               onPressed: () {
                 Navigator.pop(context);
                 handlePress(context);
               },
-              child: Text('Confirm'),
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25)),
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             )
           ],
         );
@@ -182,63 +242,36 @@ class _CollectionDetailsState extends State<CollectionDetails> {
         children: [
           Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  height: 40,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: Center(
-                      child: Text(
-                        "Basic A/c Details",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+              SizedBox(height: 10),
+              Card(
+                color: Colors.green,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
+                    details('Name', widget.doc?.name ?? ''),
+                    details('Account No', widget.doc?.accountNumber),
+                    //details('Address', widget.doc?.address),
+
+                    //details('Date', "${date.day}-${date.month}-${date.year}"),
+                    details(
+                        'Principal Amount', widget.doc?.totalPrincipalAmount),
+                    details('Interests', widget.doc?.totalInterestAmount),
+                    //details('Interests', widget.doc?.),
+                    details('Opening date',
+                        "${widget.doc?.createdAt.toString().split("T")[0]}"),
+                    details('Maturity date',
+                        "${widget.doc?.maturityDate.toString().split("T")[0]}"),
+                    details('Installment', widget.doc?.installmentAmount ?? ''),
+                    details(
+                        'Collected Balance', "${widget.doc?.totalCollection}"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
                 ),
               ),
-              // SizedBox(
-              //   height: 100,
-              //   width: 100,
-              //   child: Image( image: MemoryImage(profile))),
-
-              // Container(
-              //   width: 80,
-              //   height: 80,
-              //   //child: Image.memory(profile),
-              //   decoration: BoxDecoration(
-              //     shape: BoxShape.circle,
-              //     image: profile.isEmpty
-              //         ? DecorationImage(
-              //             image: MemoryImage(profile),
-              //             fit: BoxFit.fill,
-              //           )
-              //         : null,
-              //   ),
-              // ),
-              SizedBox(height: 10),
-              // SizedBox(
-              //   height: 10,
-              // ),
-              details('Name', widget.doc?.name ?? ''),
-              details('Account No', widget.doc?.accountNumber),
-              details('Address', widget.doc?.address),
-              details('Installment', widget.doc?.installmentAmount ?? ''),
-              details('Date', "${date.day}-${date.month}-${date.year}"),
-              details('Principal Amount', widget.doc?.totalPrincipalAmount),
-              details('Interests', widget.doc?.totalInterestAmount),
-              //details('Interests', widget.doc?.),
-              details('Maturity date',
-                  "${maturity.day}-${maturity.month}-${maturity.year}"),
               SizedBox(
                 height: 8,
               ),
@@ -247,6 +280,7 @@ class _CollectionDetailsState extends State<CollectionDetails> {
                 child: Form(
                   key: _key,
                   child: TextFormField(
+                    style: TextStyle(fontSize: 20),
                     controller: _amount,
                     validator: (v) {
                       if (v == null || v.isEmpty) {
@@ -256,12 +290,55 @@ class _CollectionDetailsState extends State<CollectionDetails> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
+                      errorStyle: TextStyle(color: Colors.black, fontSize: 10),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(30.0))),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(30.0))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(30.0))),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(30.0))),
                       contentPadding: EdgeInsets.only(left: 10),
                       hintText: 'Enter Amount',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      // focusedBorder: OutlineInputBorder(
+                      //   borderSide: BorderSide(color: Colors.grey),
+                      //   borderRadius: BorderRadius.circular(10),
+                      // ),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 10),
+                child: Container(
+                  //width: MediaQuery.of(context).size.width - 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(30.0)),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: MaterialButton(
+                    onPressed: () {
+                      if (_key.currentState!.validate()) {
+                        showConfirmDialog();
+                      }
+                    },
+                    child: Text(
+                      'Collect',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
                 ),
@@ -272,16 +349,19 @@ class _CollectionDetailsState extends State<CollectionDetails> {
                   ? Container()
                   : InkWell(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    LoanCollection(widget.doc?.accountNumber)));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) =>
+                        //             LoanCollection(widget.doc)));
                       },
                       child: Container(
                         height: 40,
-                        width: MediaQuery.of(context).size.width - 20,
-                        color: Colors.grey,
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: Colors.green,
+                        ),
                         child: InkWell(
                           child: Center(
                             child: Text(
@@ -293,31 +373,49 @@ class _CollectionDetailsState extends State<CollectionDetails> {
                         ),
                       ),
                     ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 10),
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(30.0)),
-                  width: MediaQuery.of(context).size.width,
-                  child: MaterialButton(
-                    onPressed: () => showConfirmDialog(),
-                    child: Text(
-                      'Collect',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
             ],
-          )
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              widget.doc?.loanAccountNumber == 0
+                  ? InkWell(
+                      child: Center(
+                          child: Center(
+                        child: Text(
+                          "Apply Loan",
+                          style: TextStyle(color: Colors.green, fontSize: 16),
+                        ),
+                      )),
+                    )
+                  : Container(),
+              SizedBox(
+                width: 20,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => PassbookCustomer(widget.doc)));
+                },
+                child: Center(
+                    child: Center(
+                  child: Text(
+                    "See Passbook",
+                    style: TextStyle(color: Colors.green, fontSize: 16),
+                  ),
+                )),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 50,
+          ),
         ],
       ),
     );
@@ -329,31 +427,43 @@ class _CollectionDetailsState extends State<CollectionDetails> {
       child: Container(
         height: 45,
         child: Card(
+          elevation: 5,
           child: Row(
             children: [
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text('$string')),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
                 child: Container(
-                  color: Colors.amber,
+                  color: Colors.green,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
+                        padding: const EdgeInsets.only(left: 10.0),
                         child: Align(
                           alignment: Alignment.centerLeft,
+                          child: Text(
+                            '$string',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  color: Colors.green,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Align(
+                          alignment: Alignment.centerRight,
                           //child: Text(name.toString())),
                           child: RichText(
                             text: TextSpan(

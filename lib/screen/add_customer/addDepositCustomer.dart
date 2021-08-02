@@ -10,7 +10,10 @@ class AddDepositCustomer extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[900],
-        title: Text('Add Deposit Customer'),
+        title: Text(
+          'Add Deposit Customer',
+          style: TextStyle(fontSize: 16),
+        ),
       ),
       body: Scrollbar(
         child: AddCustomerMV(),
@@ -18,7 +21,3 @@ class AddDepositCustomer extends StatelessWidget {
     );
   }
 }
-// MaxWidthContainer(
-//             child: Responsivelayout(mobileView: AddCustomerMV()),
-//           ),
-//         )

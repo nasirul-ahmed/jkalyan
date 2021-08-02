@@ -83,3 +83,31 @@ Future<void> showLoadingDialog(BuildContext context) {
     },
   );
 }
+
+upLoadingDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) {
+      return AlertDialog(
+        content: SizedBox(
+          height: 200,
+          width: MediaQuery.of(context).size.width - 20,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Uploading Image Data...'),
+              SizedBox(
+                height: 30,
+              ),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.blue),
+                strokeWidth: 5.0,
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

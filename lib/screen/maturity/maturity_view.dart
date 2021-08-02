@@ -91,7 +91,7 @@ class _MaturityViewState extends State<MaturityView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange[700],
-        title: Text('Deposit Collection'),
+        title: Text('Maturity/Pre Maturity'),
       ),
       body: Container(
         child: Column(
@@ -100,7 +100,7 @@ class _MaturityViewState extends State<MaturityView> {
               padding: const EdgeInsets.all(10.0),
               child: TextField(
                 controller: _searchAc,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   suffixIcon:
                       //query.text.trim().isNotEmpty?
@@ -161,6 +161,7 @@ class _MaturityViewState extends State<MaturityView> {
                                             ),
                                           ),
                                     onTap: () {
+                                      // if (widget.isMaturity) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -168,6 +169,15 @@ class _MaturityViewState extends State<MaturityView> {
                                               Maturity(snap.data?[id]),
                                         ),
                                       );
+                                      // } else {
+                                      //   Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //       builder: (_) =>
+                                      //           PreMaturity(snap.data?[id]),
+                                      //     ),
+                                      //   );
+                                      // }
                                     },
                                     title: Text(
                                       '${snap.data?[id].name}',
@@ -224,8 +234,23 @@ class _MaturityViewState extends State<MaturityView> {
                                           ),
                                         ),
                                   onTap: () {
-                                    //print(doc.id);
-                                    //Navigator.pushNamed(context, CSTransaction.id);
+                                    //if (widget.isMaturity) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            Maturity(snap.data?[id]),
+                                      ),
+                                    );
+                                    // } else {
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //       builder: (_) =>
+                                    //           PreMaturity(snap.data?[id]),
+                                    //     ),
+                                    //   );
+                                    // }
                                   },
                                   title: Text(
                                     '${snap.data?[id].name}',

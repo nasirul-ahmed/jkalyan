@@ -9,35 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoanCollection extends StatelessWidget {
-  LoanCollection(this.customerAccount);
-  final int? customerAccount;
+  LoanCollection(this.doc);
+  final LoanCustomer? doc;
   final _key = GlobalKey<FormState>();
   TextEditingController _amount = TextEditingController();
-  Future<LoanCustomer> getLoanCustomer() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    String uri = '$janaklyan/api/collector/loan/customer';
-    final response = await http.post(
-      Uri.parse(uri),
-      headers: <String, String>{
-        "Content-Type": "application/json",
-        "Accept": "*/*",
-        "Authorization": "Bearer ${_prefs.getString('token')}"
-      },
-      body: jsonEncode(<String, dynamic>{
-        "id": _prefs.getInt('collectorId'),
-        "depositAc": customerAccount
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      print('success added' + response.body.toString());
-      var jsonData = jsonDecode(response.body);
-      return LoanCustomer.fromJson(jsonData);
-    } else {
-      print(response.statusCode);
-      throw Exception('wrong');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,85 +28,103 @@ class LoanCollection extends StatelessWidget {
               height: 10,
             ),
             // details("string", name)
-            FutureBuilder<LoanCustomer>(
-                future: getLoanCustomer(),
-                builder: (_, snap) {
-                  if (snap.hasData) {
-                    return ListView(
-                      shrinkWrap: true,
-                      children: [
-                        details("Name", snap.data!.custName),
-                        details("Loan Account", snap.data!.loanAcNo),
-                        details("Loan Amount", snap.data!.loanAmount),
-                        details("Interest Amount", snap.data!.loanInterest),
-                        details("Created At",
-                            snap.data!.createdAt?.split('T').first),
-                        details("Last update",
-                            snap.data!.createdAt?.split('T').first),
-                        details(
-                            "Collection Amount", snap.data!.totalCollection),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0, right: 15),
-                          child: Form(
-                            key: _key,
-                            child: TextFormField(
-                              controller: _amount,
-                              validator: (v) {
-                                if (v == null || v.isEmpty) {
-                                  return "Should not be empty!";
-                                }
-                                return null;
-                              },
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(left: 10),
-                                hintText: 'Enter Recovery Amount',
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0, right: 10),
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(30.0)),
-                            width: MediaQuery.of(context).size.width,
-                            child: MaterialButton(
-                              onPressed: () => showConfirmDialog(context),
-                              child: Text(
-                                'Collect',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    );
-                  } else if (snap.hasError) {
-                    return Center(
-                      child: Text('Something\'s wrong'),
-                    );
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }),
+
+            ListView(
+              shrinkWrap: true,
+              children: [
+                Card(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.end,
+                    // crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      details("Name", doc!.custName),
+                      details("Loan Account", doc!.loanAcNo),
+                      details("Loan Amount", doc?.loanAmount),
+                      details("Created At", doc!.createdAt?.split('T').first),
+                      details("Last update", doc!.updatedAt?.split('T').first),
+                      details("Interest Rate", doc!.interestRate),
+                      details("Interest Amount", doc!.loanInterest),
+                      details("Collection Amount", doc!.totalCollection),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0, right: 15),
+                  child: Form(
+                    key: _key,
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 20),
+                      controller: _amount,
+                      validator: (v) {
+                        if (v == null || v.isEmpty) {
+                          return "Should not be empty!";
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        errorStyle:
+                            TextStyle(color: Colors.black, fontSize: 10),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30.0))),
+                        errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30.0))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30.0))),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30.0))),
+                        contentPadding: EdgeInsets.only(left: 10),
+                        hintText: 'Enter Amount',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 10),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(30.0)),
+                    width: MediaQuery.of(context).size.width,
+                    child: MaterialButton(
+                      onPressed: () {
+                        if (_key.currentState!.validate()) {
+                          showConfirmDialog(context);
+                        }
+                      },
+                      child: Text(
+                        'Collect',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -144,7 +137,7 @@ class LoanCollection extends StatelessWidget {
     String uri = '$janaklyan/api/collector/loan/collection';
 
     DateTime x = DateTime.now();
-    final response = await http.post(
+    final res = await http.post(
       Uri.parse(uri),
       headers: <String, String>{
         "Content-Type": "application/json",
@@ -153,23 +146,66 @@ class LoanCollection extends StatelessWidget {
       },
       body: jsonEncode(<String, dynamic>{
         "collectorId": _prefs.getInt('collectorId'),
-        "depositAcNo": customerAccount,
-        //"loanAcNo": customerAccount,
+        "loanAcNo": doc!.loanAcNo,
         "amount": (int.parse(_amount.text)).abs(),
-        "createdAt": "${x.year}-${x.month}-${x.day}"
+        "createdAt": DateTime.now().toString().split(' ')[0]
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (res.statusCode == 200) {
+      var parsed = jsonDecode(res.body);
       Navigator.pop(context);
-      print(response.body.toString());
+      print(res.body.toString());
       //var jsonData = jsonDecode(response.body);
-      Navigator.push(context, MaterialPageRoute(builder: (_) => DashBoard()));
+      //Navigator.push(context, MaterialPageRoute(builder: (_) => DashBoard()));
       Fluttertoast.showToast(msg: "Collected");
+      successCollectionDialog(parsed['insertId'], context);
     } else {
-      print(response.statusCode);
+      print(res.statusCode);
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: "Error");
       throw Exception('wrong');
     }
+  }
+
+  Future<void> successCollectionDialog(int? tnxId, BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+          backgroundColor: Colors.green,
+          title: Text(
+            'Money Collected.',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            'Transaction Id: $tnxId',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            MaterialButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => DashBoard()));
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25)),
+                child: Text(
+                  '  ok  ',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 
   Future<void> showConfirmDialog(BuildContext context) {
@@ -178,15 +214,31 @@ class LoanCollection extends StatelessWidget {
       barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
-          title: Text('Are you sure?'),
-          content: Text('Amount: ${_amount.text}'),
+          title: Text(
+            'Are you sure?',
+            style: TextStyle(color: Colors.green),
+          ),
+          content: Text(
+            'Amount: ${_amount.text}',
+            style: TextStyle(color: Colors.green),
+          ),
           actions: [
             MaterialButton(
               onPressed: () {
                 Navigator.pop(context);
                 collectLoan(context);
               },
-              child: Text('Confirm'),
+              child: Container(
+                  margin: EdgeInsets.only(right: 5),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25)),
+                  child: Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.white),
+                  )),
             )
           ],
         );
@@ -222,9 +274,9 @@ class LoanCollection extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
+                        padding: const EdgeInsets.only(right: 8.0),
                         child: Align(
-                          alignment: Alignment.centerLeft,
+                          alignment: Alignment.centerRight,
                           //child: Text(name.toString())),
                           child: RichText(
                             text: TextSpan(

@@ -5,15 +5,15 @@ import 'package:devbynasirulahmed/models/collector.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoanWallet extends StatelessWidget {
-  const LoanWallet({Key? key}) : super(key: key);
+class DepositWallet extends StatelessWidget {
+  const DepositWallet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var screen = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Loan Wallet'),
+          title: Text('Deposit Wallet'),
         ),
         body: Column(
           children: [
@@ -35,13 +35,13 @@ class LoanWallet extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('Total Loan Balance in your Wallet',
+                            Text('Total Balance in your Wallet',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16)),
                             SizedBox(
                               height: 10,
                             ),
-                            Text("₹ ${snap.data!.totalLoanCollection}",
+                            Text("₹ ${snap.data!.totalCollection}",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18)),
                           ],

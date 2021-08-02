@@ -206,7 +206,7 @@ class _TransferLoanViewState extends State<TransferLoanView> {
         url,
         body: jsonEncode(<String, dynamic>{
           "collectorId": id,
-          "date": "${date.year}-${date.month}-${date.day}"
+          "date": "${DateTime.now().toString().split(" ")[0]}"
         }),
         headers: {
           'Content-Type': 'application/json',

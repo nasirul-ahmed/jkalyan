@@ -10,17 +10,19 @@ LoanCustomer customerFromJson(String str) =>
 String customerToJson(LoanCustomer data) => json.encode(data.toJson());
 
 class LoanCustomer {
-  LoanCustomer({
-    this.id,
-    this.collectorId,
-    this.createdAt,
-    this.custName,
-    this.depositAcNo,
-    this.loanAcNo,
-    this.loanAmount,
-    this.loanInterest,
-    this.totalCollection,
-  });
+  LoanCustomer(
+      {this.id,
+      this.collectorId,
+      this.createdAt,
+      this.custName,
+      this.depositAcNo,
+      this.loanAcNo,
+      this.loanAmount,
+      this.loanInterest,
+      this.totalCollection,
+      this.dueDays,
+      this.interestRate,
+      this.updatedAt});
 
   final int? id;
   final int? loanAcNo;
@@ -31,18 +33,23 @@ class LoanCustomer {
   final num? loanAmount;
   final num? totalCollection;
   final num? loanInterest;
+  final int? dueDays;
+  final num? interestRate;
+  final String? updatedAt;
 
   factory LoanCustomer.fromJson(Map<String, dynamic> json) => LoanCustomer(
-        id: json["id"],
-        loanAcNo: json["loanAcNo"],
-        depositAcNo: json["depositAcNo"],
-        custName: json["custName"],
-        collectorId: json["collectorId"],
-        createdAt: json["createdAt"],
-        totalCollection: json["totalCollection"],
-        loanAmount: json["loanAmount"],
-        loanInterest: json["loanInterest"],
-      );
+      id: json["id"],
+      loanAcNo: json["loanAcNo"],
+      depositAcNo: json["depositAcNo"],
+      custName: json["custName"],
+      collectorId: json["collectorId"],
+      createdAt: json["createdAt"],
+      totalCollection: json["totalCollection"],
+      loanAmount: json["loanAmount"],
+      loanInterest: json["loanInterest"],
+      dueDays: json["dueDays"],
+      interestRate: json["interestRate"],
+      updatedAt: json["updatedAt"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -54,5 +61,8 @@ class LoanCustomer {
         "totalCollection": totalCollection,
         "loanAmount": loanAmount,
         "loanInterest": loanInterest,
+        "dueDays": dueDays,
+        "interestRate": interestRate,
+        "updatedAt": updatedAt
       };
 }

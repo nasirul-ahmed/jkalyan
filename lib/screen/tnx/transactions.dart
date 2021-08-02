@@ -62,7 +62,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                 return ListView.builder(
                     itemCount: snap.data?.length,
                     itemBuilder: (___, indx) {
-                      return customView(snap.data?[indx]);
+                      return customView(snap.data![indx]);
                     });
               }
               return Center(
@@ -73,8 +73,8 @@ class _TransactionsViewState extends State<TransactionsView> {
     );
   }
 
-  Widget customView(doc) {
-    DateTime date = DateTime.parse(doc.date);
+  Widget customView(TransactionsModel doc) {
+    //DateTime date = DateTime.parse(doc.date);
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Card(
@@ -186,7 +186,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                                 child: RichText(
                                   text: TextSpan(
                                     text: "Date : " +
-                                        "${date.day}-${date.month}-${date.year}",
+                                        "${doc.date.toString().split("T")[0]}",
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.black,

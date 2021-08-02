@@ -11,38 +11,6 @@ class TransferDeposit extends StatefulWidget {
 }
 
 class _TransferDepositState extends State<TransferDeposit> {
-  // handlePress() async {
-  //   showLoadingDialog(context);
-  //   DateTime date = DateTime.now();
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? token = prefs.getString('token');
-  //   int? id = prefs.getInt('collectorId');
-
-  //   Uri url = Uri.parse("$janaklyan/api/collector/create/deposit/tnx");
-
-  //   try {
-  //     var res = await http.post(
-  //       url,
-  //       body: jsonEncode(<String, dynamic>{
-  //         "collectorId": id,
-  //         "date": "${date.year}-${date.month}-${date.day}",
-  //       }),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         "Authorization": "Bearer $token"
-  //       },
-  //     );
-
-  //     if (200 == res.statusCode) {
-  //       Navigator.pop(context);
-  //       Fluttertoast.showToast(msg: 'Sent to manager');
-  //     } else {
-  //       Navigator.pop(context);
-  //       showErrorDialog(context);
-  //     }
-  //   } catch (e) {}
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +63,7 @@ class _TransferDepositState extends State<TransferDeposit> {
 
   Widget customViews(DepositTnxModel? doc) {
     const IconData check = IconData(0xe156, fontFamily: 'MaterialIcons');
-    DateTime date = DateTime.parse(doc!.createdAt!);
+    DateTime date = DateTime.parse(doc!.createdAt!.toString());
     return Padding(
       padding: EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 5),
       child: Container(

@@ -1,12 +1,20 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/account_register/account_register_view.dart';
+import 'package:devbynasirulahmed/screen/add_customer/addDepositCustomer.dart';
+import 'package:devbynasirulahmed/screen/loan_applications/loan_applications.dart';
+import 'package:devbynasirulahmed/screen/maturity/sent_maturity/sent_maturity.dart';
 import 'package:devbynasirulahmed/screen/old_customers/old_viewer.dart';
+import 'package:devbynasirulahmed/screen/passbook/loan_passbook/loan_passbook_search.dart';
 import 'package:devbynasirulahmed/screen/passbook/passbook.dart';
 import 'package:devbynasirulahmed/screen/tnx/loan_tnx.dart';
 import 'package:devbynasirulahmed/screen/tnx/transactions.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/deposit/transfer_deposit.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/loan/transfer_loan.dart';
 import 'package:devbynasirulahmed/screen/upload/reupload.dart';
+import 'package:devbynasirulahmed/screen/upload/upload_docs.dart';
+import 'package:devbynasirulahmed/screen/wallet/deposit_wallet/deposit_wallet.dart';
+import 'package:devbynasirulahmed/screen/wallet/loan_wallet/loan_wallet.dart';
 import 'package:devbynasirulahmed/services/auth/logout.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +32,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   String? email;
   String? name;
   int? id;
-  int totalCustomer = 0;
+  int? totalCustomer;
 
   getEmail() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -35,10 +43,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
     });
   }
 
-  getTotalCustomers() async {
+  Future<void> getTotalCustomers() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     Uri uri = Uri.parse(
-        'https://janakalyan-ag.herokuapp.com/api/collector/total/customers/${_prefs.getInt("collectorId")}');
+        '$janaklyan/api/collector/total/customers/${_prefs.getInt("collectorId")}');
 
     try {
       final res = await http.get(uri,
@@ -110,14 +118,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: ListTile(
-                      leading: Icon(
-                        Icons.supervisor_account,
-                        color: Colors.green,
-                        size: 20,
-                      ),
-                      title: Text(
-                        'Passbook',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          'Passbook',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
                       onTap: () {
                         Navigator.push(context,
@@ -137,14 +143,39 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: ListTile(
-                      leading: FaIcon(
-                        FontAwesomeIcons.book,
-                        color: Colors.green,
-                        size: 16,
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          'Loan Passbook',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
-                      title: Text(
-                        'Account Register',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => LoanPassBookSearch()));
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Divider(
+                    height: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          'Account Register',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
                       onTap: () {
                         Navigator.push(
@@ -170,14 +201,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: ListTile(
-                      leading: Icon(
-                        Icons.swap_vert_circle,
-                        color: Colors.green,
-                        size: 18,
-                      ),
-                      title: Text(
-                        'Deposit History',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          'Deposit History',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
                       onTap: () {
                         Navigator.pushNamed(context, TransferDeposit.id);
@@ -196,14 +225,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: ListTile(
-                      leading: Icon(
-                        Icons.swap_vert_circle,
-                        color: Colors.green,
-                        size: 20,
-                      ),
-                      title: Text(
-                        'Loan Deposit History',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          'Loan Deposit History',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
                       onTap: () {
                         // Update the state of the app.
@@ -232,14 +259,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: ListTile(
-                      leading: FaIcon(
-                        Icons.pending_actions,
-                        color: Colors.green,
-                        size: 20,
-                      ),
-                      title: Text(
-                        'Tnx History',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          'Tnx History',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
                       onTap: () {
                         Navigator.pushNamed(context, TransactionsView.id);
@@ -252,14 +277,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: ListTile(
-                      leading: FaIcon(
-                        Icons.pending_actions,
-                        color: Colors.green,
-                        size: 20,
-                      ),
-                      title: Text(
-                        'Loan Tnx History',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          'Loan Tnx History',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
                       onTap: () {
                         Navigator.push(
@@ -272,45 +295,124 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 ),
               ],
             ),
+            ExpansionTile(
+              leading: FaIcon(
+                Icons.account_balance_wallet_outlined,
+                size: 20,
+                color: Colors.green,
+              ),
+              title: Text('Wallet'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      title: Text(
+                        'Deposit Wallet',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => DepositWallet()));
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: ListTile(
+                      title: Text(
+                        'Loan Wallet',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => LoanWallet()));
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Container(
               decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
                 leading: FaIcon(
-                  Icons.person_pin_sharp,
+                  Icons.format_list_bulleted_rounded,
                   color: Colors.green,
                   size: 20,
                 ),
                 title: Text(
-                  'Closed A/c ($totalCustomer)',
+                  'Loan Applications',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => LoanApplications()));
+                },
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: ListTile(
+                leading: FaIcon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 20,
+                ),
+                title: Text(
+                  'Check Maturity Status',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => SentMaturity()));
+                },
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: ListTile(
+                leading: FaIcon(
+                  Icons.person_add,
+                  color: Colors.green,
+                  size: 20,
+                ),
+                title: Text(
+                  'Add Customer',
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 onTap: () {
                   // Update the state of the app.
                   // ...
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => OldCustomerView()));
+                      MaterialPageRoute(builder: (_) => AddDepositCustomer()));
                 },
               ),
             ),
-            Container(
-              decoration: BoxDecoration(color: Colors.white),
-              child: ListTile(
-                leading: FaIcon(
-                  Icons.upload_file,
-                  color: Colors.green,
-                  size: 20,
-                ),
-                title: Text(
-                  'Upload',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                ),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                  Navigator.pushNamed(context, ReUploadProfile.id);
-                },
-              ),
-            ),
+            // Container(
+            //   decoration: BoxDecoration(color: Colors.white),
+            //   child: ListTile(
+            //     leading: FaIcon(
+            //       Icons.upload_file,
+            //       color: Colors.green,
+            //       size: 20,
+            //     ),
+            //     title: Text(
+            //       'Upload',
+            //       style: TextStyle(fontSize: 16, color: Colors.black),
+            //     ),
+            //     onTap: () {
+            //       // Update the state of the app.-8
+            //       // ...
+            //       Navigator.push(
+            //           context, MaterialPageRoute(builder: (_) => UploadDocs()));
+            //     },
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20),
               child: Opacity(

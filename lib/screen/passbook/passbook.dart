@@ -105,7 +105,7 @@ class _PassBookState extends State<PassBook> {
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: TextField(
               controller: _searchAc,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 suffixIcon:
                     //query.text.trim().isNotEmpty?

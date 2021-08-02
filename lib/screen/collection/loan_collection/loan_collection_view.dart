@@ -1,27 +1,23 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:devbynasirulahmed/constants/api_url.dart';
-import 'package:devbynasirulahmed/models/customer.dart';
-import 'package:devbynasirulahmed/screen/collection/deposit_collection/collection.dart';
-import 'package:devbynasirulahmed/services/customer_service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:devbynasirulahmed/models/loan_customer.dart';
+import 'package:devbynasirulahmed/screen/collection/loan_collection/loan_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DepositCollection extends StatefulWidget {
+class LoanCollectionView extends StatefulWidget {
   @override
-  _DepositCollectionState createState() => _DepositCollectionState();
+  _LoanCollectionViewState createState() => _LoanCollectionViewState();
 }
 
-class _DepositCollectionState extends State<DepositCollection> {
+class _LoanCollectionViewState extends State<LoanCollectionView> {
   TextEditingController _searchAc = TextEditingController();
 
   String query = '';
 
-  Future<List<Customer>> getCustomerByAc() async {
+  Future<List<LoanCustomer>> getCustomerByAc() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final url = Uri.parse('$janaklyan/api/collector/searchaccount');
 
@@ -40,22 +36,26 @@ class _DepositCollectionState extends State<DepositCollection> {
           body: body);
       if (200 == res.statusCode) {
         print(res.body.toString());
-        return compute(parseCustomer, res.body);
+        final parsed = jsonDecode(res.body).cast<Map<String, dynamic>>();
+
+        return parsed
+            .map<LoanCustomer>((json) => LoanCustomer.fromJson(json))
+            .toList();
       }
-      return List<Customer>.empty();
+      return List<LoanCustomer>.empty();
     } catch (e) {
       throw e;
     }
   }
 
-  Future<List<Customer>> getCustomer() async {
+  Future<List<LoanCustomer>> getCustomer() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    final url = Uri.parse('$janaklyan/api/agents/customers');
+    final url = Uri.parse('$janaklyan/api/collector/loan/customer');
 
     try {
       var res = await http.post(url,
-          body: jsonEncode({
-            "id": _prefs.getInt('collectorId'),
+          body: jsonEncode(<String, dynamic>{
+            "collectorId": _prefs.getInt('collectorId'),
           }),
           headers: {
             "Content-Type": "application/json",
@@ -64,9 +64,13 @@ class _DepositCollectionState extends State<DepositCollection> {
           });
       if (200 == res.statusCode) {
         print(jsonDecode(res.body).toString());
-        return compute(parseCustomer, res.body);
+        final parsed = jsonDecode(res.body).cast<Map<String, dynamic>>();
+
+        return parsed
+            .map<LoanCustomer>((json) => LoanCustomer.fromJson(json))
+            .toList();
       }
-      return List<Customer>.empty();
+      return List<LoanCustomer>.empty();
     } catch (e) {
       print(e);
       throw e;
@@ -91,7 +95,7 @@ class _DepositCollectionState extends State<DepositCollection> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange[700],
-        title: Text('Deposit Collection'),
+        title: Text('Loan Collection'),
       ),
       body: Column(
         children: [
@@ -125,7 +129,7 @@ class _DepositCollectionState extends State<DepositCollection> {
           ),
           _searchAc.text.isEmpty
               ? Flexible(
-                  child: FutureBuilder<List<Customer>>(
+                  child: FutureBuilder<List<LoanCustomer>>(
                       future: getCustomer(),
                       builder: (_, snap) {
                         if (snap.hasError) {
@@ -138,47 +142,29 @@ class _DepositCollectionState extends State<DepositCollection> {
                               shrinkWrap: true,
                               itemCount: snap.data?.length,
                               itemBuilder: (__, id) {
-                                print(snap.data?[id].profile ?? 'y');
-                                Uint8List? profile = Base64Decoder()
-                                    .convert(snap.data?[id].profile ?? '');
                                 return ListTile(
                                   hoverColor: Colors.grey[300],
-                                  leading: snap.data?[id].profile == null
-                                      ? CircleAvatar(
-                                          child: Icon(Icons.person),
-                                        )
-                                      : Container(
-                                          width: 40,
-                                          height: 40,
-                                          //child: Image.memory(profile),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: MemoryImage(profile),
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ),
+                                  leading: Text(''),
                                   onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (_) =>
-                                            CollectionDetails(snap.data?[id]),
+                                            LoanCollection(snap.data?[id]),
                                       ),
                                     );
                                   },
                                   title: Text(
-                                    '${snap.data?[id].name}',
+                                    '${snap.data?[id].custName}',
                                     style: TextStyle(fontSize: 20.0),
                                   ),
                                   subtitle: Text(
-                                    'A/c: ${snap.data?[id].accountNumber}',
+                                    'A/c: ${snap.data?[id].loanAcNo}',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   trailing: Container(
                                     child: Text(
-                                        '₹ ${snap.data?[id].totalPrincipalAmount}'),
+                                        '₹ ${snap.data?[id].totalCollection}'),
                                   ),
                                 );
                               });
@@ -191,7 +177,7 @@ class _DepositCollectionState extends State<DepositCollection> {
                       }),
                 )
               : Flexible(
-                  child: FutureBuilder<List<Customer>>(
+                  child: FutureBuilder<List<LoanCustomer>>(
                     future: getCustomerByAc(),
                     builder: (_, snap) {
                       if (snap.hasError) {
@@ -202,47 +188,28 @@ class _DepositCollectionState extends State<DepositCollection> {
                             shrinkWrap: true,
                             itemCount: snap.data?.length,
                             itemBuilder: (__, id) {
-                              Uint8List? profile = Base64Decoder()
-                                  .convert(snap.data?[id].profile ?? '');
                               return ListTile(
                                 hoverColor: Colors.grey[300],
-                                leading: snap.data?[id].profile == null
-                                    ? CircleAvatar(
-                                        child: Icon(Icons.person),
-                                      )
-                                    : Container(
-                                        width: 40,
-                                        height: 40,
-                                        //child: Image.memory(profile),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: MemoryImage(profile),
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
+                                leading: Text(''),
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) =>
-                                          CollectionDetails(snap.data?[id]),
+                                          LoanCollection(snap.data?[id]),
                                     ),
                                   );
-                                  //print(doc.id);
-                                  //Navigator.pushNamed(context, CSTransaction.id);
                                 },
                                 title: Text(
-                                  '${snap.data?[id].name}',
+                                  '${snap.data?[id].custName}',
                                   style: TextStyle(fontSize: 20.0),
                                 ),
                                 subtitle: Text(
-                                  'A/c: ${snap.data?[id].accountNumber}',
+                                  'Loan A/c: ${snap.data?[id].loanAcNo}',
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 trailing: Container(
-                                  child: Text("Balance " +
+                                  child: Text("Recovery Balance " +
                                       '₹ ${snap.data?[id].totalCollection}'),
                                 ),
                               );

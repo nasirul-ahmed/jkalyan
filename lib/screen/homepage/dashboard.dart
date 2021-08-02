@@ -62,8 +62,7 @@ class _DashBoardState extends State<DashBoard> {
     String? token = prefs.getString('token');
     int? id = prefs.getInt('collectorId');
 
-    Uri url =
-        Uri.parse("$janaklyan/api/collector/loan/todays-deposit-collection");
+    Uri url = Uri.parse("$janaklyan/api/collector/todays-loan-collection");
 
     try {
       print(token);
@@ -72,7 +71,7 @@ class _DashBoardState extends State<DashBoard> {
         url,
         body: jsonEncode(<String, dynamic>{
           "id": id,
-          "date": "${getDate.year}-${getDate.month}-${getDate.day}"
+          "date": DateTime.now().toString().split(" ")[0]
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -147,14 +146,17 @@ class _DashBoardState extends State<DashBoard> {
         title: Text('DashBoard'),
         backgroundColor: Colors.pink[900],
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 5,
-          ),
-          mobileViewDashboard(context, regularAmount, loanAmount,
-              totalCustomers, totalLoanCustomers)
-        ],
+      body: Container(
+        padding: EdgeInsets.all(2),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 5,
+            ),
+            mobileViewDashboard(context, regularAmount, loanAmount,
+                totalCustomers, totalLoanCustomers)
+          ],
+        ),
       ),
     );
   }

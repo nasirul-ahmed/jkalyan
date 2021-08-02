@@ -65,9 +65,22 @@ class _SearchCustomerState extends State<SearchCustomer> {
                       'A/c: ${snap.data?[id].accountNumber}',
                       style: TextStyle(fontSize: 16),
                     ),
-                    trailing: Container(
-                      child: Text('₹ ${snap.data?[id].totalPrincipalAmount}'),
-                    ),
+                    trailing: snap.data?[id].loanAccountNumber == 0
+                        ? Container(
+                            child: Text('₹ ${snap.data?[id].totalCollection}'),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text('₹ ${snap.data?[id].totalCollection}'),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                  'loan a/c : ${snap.data?[id].loanAccountNumber}'),
+                            ],
+                          ),
                   );
                 });
           } else
@@ -123,10 +136,23 @@ class _SearchCustomerState extends State<SearchCustomer> {
                             'A/c: ${snap.data?[id].accountNumber}',
                             style: TextStyle(fontSize: 16),
                           ),
-                          trailing: Container(
-                            child: Text(
-                                '₹ ${snap.data?[id].totalPrincipalAmount}'),
-                          ),
+                          trailing: snap.data?[id].loanAccountNumber == 0
+                              ? Container(
+                                  child: Text(
+                                      '₹ ${snap.data?[id].totalCollection}'),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text('₹ ${snap.data?[id].totalCollection}'),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                        'loan a/c : ${snap.data?[id].loanAccountNumber}'),
+                                  ],
+                                ),
                         );
                       });
                 } else {

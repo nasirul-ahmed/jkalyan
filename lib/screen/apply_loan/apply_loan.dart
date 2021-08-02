@@ -18,43 +18,7 @@ class _ApplyLoanState extends State<ApplyLoan> {
   TextEditingController _amount = TextEditingController();
 
   TextEditingController _accountNumber = TextEditingController();
-
-  Future<void> applyLoan() async {
-    showLoadingDialog(context);
-    final url = Uri.parse('$janaklyan/api/collector/apply-loan');
-
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    String? token = _prefs.getString('token');
-    //"Authorization": "Bearer $token"
-    DateTime x = DateTime.now();
-    var body = jsonEncode({
-      "collectorId": _prefs.getInt('id'),
-      "depositAcNo": _accountNumber.text,
-      "loanAmount": _amount.text,
-      "createdAt": "${x.year}-${x.month}-${x.day}"
-    });
-    try {
-      var res = await http.post(
-        url,
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer $token",
-        },
-        body: body,
-      );
-      if (200 == res.statusCode) {
-        print(res.statusCode);
-        Navigator.pop(context);
-
-        successDialog(context);
-      } else {
-        Navigator.pop(context);
-        showErrorDialog(context);
-      }
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
+  TextEditingController _custName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +66,8 @@ class _ApplyLoanState extends State<ApplyLoan> {
             Padding(
               padding:
                   const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
-              child: textField(_accountNumber, 'Account No.'),
+              child: textField(
+                  _accountNumber, 'Account No.', TextInputType.number),
             ),
             SizedBox(
               height: 10,
@@ -110,7 +75,15 @@ class _ApplyLoanState extends State<ApplyLoan> {
             Padding(
               padding:
                   const EdgeInsets.only(left: 20.0, right: 20, bottom: 20.0),
-              child: textField(_amount, 'Amount'),
+              child: textField(_custName, 'Customer Name', TextInputType.text),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 20.0, right: 20, bottom: 20.0),
+              child: textField(_amount, 'Amount', TextInputType.number),
             ),
             SizedBox(
               height: 10,
@@ -168,6 +141,45 @@ class _ApplyLoanState extends State<ApplyLoan> {
     );
   }
 
+  Future<void> applyLoan() async {
+    showLoadingDialog(context);
+    final url = Uri.parse('$janaklyan/api/collector/apply-loan');
+
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String? token = _prefs.getString('token');
+    //"Authorization": "Bearer $token"
+    // DateTime x = DateTime.now();
+    print(_prefs.getInt("collectorId"));
+    var body = jsonEncode(<String, dynamic>{
+      "collectorId": _prefs.getInt('collectorId'),
+      "depositAcNo": _accountNumber.text,
+      "loanAmount": _amount.text,
+      "createdAt": DateTime.now().toString().split(" ")[0],
+      "custName": _custName.text
+    });
+    try {
+      var res = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+      if (200 == res.statusCode) {
+        print(res.statusCode);
+        Navigator.pop(context);
+
+        successDialog(context);
+      } else {
+        Navigator.pop(context);
+        showErrorDialog(context);
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<void> showD(BuildContext context) {
     return showDialog(
         context: context,
@@ -223,7 +235,7 @@ class _ApplyLoanState extends State<ApplyLoan> {
         });
   }
 
-  Widget textField(_amount, _label) {
+  Widget textField(_amount, _label, TextInputType type) {
     return Container(
       height: 70,
       child: TextFormField(
@@ -234,7 +246,7 @@ class _ApplyLoanState extends State<ApplyLoan> {
           }
           return null;
         },
-        keyboardType: TextInputType.number,
+        keyboardType: type,
         decoration: InputDecoration(
           labelText: _label,
           labelStyle: TextStyle(color: Colors.black),

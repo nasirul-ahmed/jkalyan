@@ -59,7 +59,7 @@ class _CommissionState extends State<Commission> {
       var res = await http.get(
         url,
         headers: {
-          "Accept": "application/json",
+          'Content-Type': 'application/json',
           "Authorization": "Bearer $token",
         },
       );

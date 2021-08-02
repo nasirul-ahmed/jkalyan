@@ -1,6 +1,7 @@
 import 'package:devbynasirulahmed/screen/add_customer/addDepositCustomer.dart';
 import 'package:devbynasirulahmed/screen/apply_loan/apply_loan.dart';
 import 'package:devbynasirulahmed/screen/collection/deposit_collection/deposit_collection.dart';
+import 'package:devbynasirulahmed/screen/collection/loan_collection/loan_collection_view.dart';
 import 'package:devbynasirulahmed/screen/commission/commission.dart';
 import 'package:devbynasirulahmed/screen/maturity/maturity_view.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/deposit/deposit_transfer_view.dart';
@@ -188,10 +189,10 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                                 width: 15,
                               ),
                               Text(
-                                "Regular Customers",
+                                "Collection Now",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -204,7 +205,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                                     : '($totalCustomers)',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -223,7 +224,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddDepositCustomer(),
+                            builder: (context) => LoanCollectionView(),
                           ),
                         );
                       },
@@ -237,7 +238,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.add,
+                                Icons.person,
                                 color: Colors.white,
                                 size: 20,
                               ),
@@ -245,10 +246,10 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                                 width: 15,
                               ),
                               Text(
-                                "Add Customer",
+                                "Loan Collection",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                   letterSpacing: 1.2,
                                 ),
@@ -305,12 +306,8 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => MaturityView(),
-                          ),
-                        );
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => MaturityView()));
                       },
                       child: Container(
                         height: 50,
@@ -318,9 +315,11 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Row(
+                            //mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.south_east_outlined,
+                                Icons.send_and_archive_sharp,
                                 color: Colors.white,
                                 size: 25,
                               ),
@@ -328,7 +327,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                                 width: 15,
                               ),
                               Text(
-                                "Maturity / Pre Maturity",
+                                "Maturity / Pre-Maturity",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
