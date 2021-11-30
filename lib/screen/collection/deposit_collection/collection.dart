@@ -69,14 +69,14 @@ class _CollectionDetailsState extends State<CollectionDetails> {
           print(parsed['insertId'].toString());
           print("Money collected");
 
-          Fluttertoast.showToast(
-              msg: "Money collected",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          // Fluttertoast.showToast(
+          //     msg: "Money collected",
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.CENTER,
+          //     timeInSecForIosWeb: 1,
+          //     backgroundColor: Colors.black,
+          //     textColor: Colors.white,
+          //     fontSize: 16.0);
           successCollectionDialog(parsed['insertId']);
         } else {
           Navigator.pop(context);
