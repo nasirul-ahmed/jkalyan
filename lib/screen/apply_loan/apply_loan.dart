@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:devbynasirulahmed/constants/api_url.dart';
+import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,9 @@ import 'package:http/http.dart' as http;
 
 class ApplyLoan extends StatefulWidget {
   static const id = 'ApplyLoan';
+  final Customer? cust;
+
+  ApplyLoan({Key? key, this.cust}) : super(key: key);
 
   @override
   _ApplyLoanState createState() => _ApplyLoanState();
@@ -16,9 +20,6 @@ class _ApplyLoanState extends State<ApplyLoan> {
   final _key = GlobalKey<FormState>();
 
   TextEditingController _amount = TextEditingController();
-
-  TextEditingController _accountNumber = TextEditingController();
-  TextEditingController _custName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,53 +33,46 @@ class _ApplyLoanState extends State<ApplyLoan> {
       body: Form(
         key: _key,
         child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 10,
+              height: 20,
             ),
-            Container(
-              height: 50,
-              width: screen.width - 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[600],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    'Fill the form',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+            Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 120,
+                padding: EdgeInsets.all(10),
+                child: Card(
+                  elevation: 10,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.green[400],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: Text(
+                            "Cutomer Name : ${widget.cust!.name}",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                        Container(
+                          child: Text(
+                              "Deposit Ac : ${widget.cust!.accountNumber}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16)),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
             SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
-              child: textField(
-                  _accountNumber, 'Account No.', TextInputType.number),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 20.0, right: 20, bottom: 20.0),
-              child: textField(_custName, 'Customer Name', TextInputType.text),
-            ),
-            SizedBox(
-              height: 10,
+              height: 20,
             ),
             Padding(
               padding:
@@ -107,9 +101,6 @@ class _ApplyLoanState extends State<ApplyLoan> {
             SizedBox(
               height: 20,
             ),
-            Expanded(
-              child: SizedBox(),
-            ),
             InkWell(
               onTap: () {
                 if (_key.currentState!.validate()) {
@@ -125,7 +116,7 @@ class _ApplyLoanState extends State<ApplyLoan> {
                 ),
                 child: Center(
                   child: Text(
-                    'Submit',
+                    'Apply Loan',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
@@ -147,15 +138,13 @@ class _ApplyLoanState extends State<ApplyLoan> {
 
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String? token = _prefs.getString('token');
-    //"Authorization": "Bearer $token"
-    // DateTime x = DateTime.now();
     print(_prefs.getInt("collectorId"));
     var body = jsonEncode(<String, dynamic>{
       "collectorId": _prefs.getInt('collectorId'),
-      "depositAcNo": _accountNumber.text,
+      "depositAcNo": widget.cust!.accountNumber,
       "loanAmount": _amount.text,
-      "createdAt": DateTime.now().toString().split(" ")[0],
-      "custName": _custName.text
+      "createdAt": DateTime.now().toString(),
+      "custName": widget.cust!.name
     });
     try {
       var res = await http.post(
@@ -210,10 +199,8 @@ class _ApplyLoanState extends State<ApplyLoan> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pop(context);
-                  // Navigator.pushNamedAndRemoveUntil(
-                  //     context, DashBoard.id, (route) => false);
                   applyLoan();
+                  Navigator.pop(context);
                 },
                 child: Container(
                   height: 30,

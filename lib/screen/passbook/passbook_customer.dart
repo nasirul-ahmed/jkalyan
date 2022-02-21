@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:devbynasirulahmed/constants/api_url.dart';
+import 'package:devbynasirulahmed/services/date.format.dart';
 import 'package:http/http.dart' as http;
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/models/transactions.dart';
@@ -24,44 +25,71 @@ class PassbookCustomer extends StatelessWidget {
             ),
             Card(
               child: Container(
-                //padding: EdgeInsets.only(left: 10, right: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 height: 100,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.red,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Name :  ${doc!.name}',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Name :  ${doc!.name}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            'Collection Amnt : ${doc!.totalCollection}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      'Account Number :  ${doc!.accountNumber}',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Collector Code :  ${doc!.agentUid}',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 10.0,
+                        right: 10,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Account No :  ${doc!.accountNumber}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            'Opening Date :  ${formatDate(doc!.createdAt)}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
+           
             SizedBox(
               height: 10,
             ),
@@ -102,11 +130,13 @@ class PassbookCustomer extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          columnSpacing: 25,
+          horizontalMargin: 5,
             columns: [
               DataColumn(label: Text('C.Id', style: style1)),
               DataColumn(label: Text('Date', style: style1)),
-              DataColumn(label: Text('Daily Collection', style: style1)),
-              DataColumn(label: Text('Total Collection', style: style1)),
+              DataColumn(label: Text('Daily C.', style: style1)),
+              DataColumn(label: Text('Total C.', style: style1)),
             ],
             rows: list!
                 .map((TransactionsModel document) => DataRow(cells: [
@@ -115,7 +145,7 @@ class PassbookCustomer extends StatelessWidget {
                         style: style,
                       )),
                       DataCell(Text(
-                        '${document.date?.split("T").first}',
+                        '${formatDate(document.date)}',
                         style: style,
                       )),
                       DataCell(Text(

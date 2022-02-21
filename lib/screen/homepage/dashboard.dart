@@ -147,12 +147,10 @@ class _DashBoardState extends State<DashBoard> {
         backgroundColor: Colors.pink[900],
       ),
       body: Container(
-        padding: EdgeInsets.all(2),
+        padding: EdgeInsets.all(8),
         child: Column(
           children: [
-            SizedBox(
-              height: 5,
-            ),
+            
             mobileViewDashboard(context, regularAmount, loanAmount,
                 totalCustomers, totalLoanCustomers)
           ],

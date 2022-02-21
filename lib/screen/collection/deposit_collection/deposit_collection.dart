@@ -138,47 +138,38 @@ class _DepositCollectionState extends State<DepositCollection> {
                               shrinkWrap: true,
                               itemCount: snap.data?.length,
                               itemBuilder: (__, id) {
-                                print(snap.data?[id].profile ?? 'y');
-                                Uint8List? profile = Base64Decoder()
-                                    .convert(snap.data?[id].profile ?? '');
-                                return ListTile(
-                                  hoverColor: Colors.grey[300],
-                                  leading: snap.data?[id].profile == null
-                                      ? CircleAvatar(
-                                          child: Icon(Icons.person),
-                                        )
-                                      : Container(
-                                          width: 40,
-                                          height: 40,
-                                          //child: Image.memory(profile),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: MemoryImage(profile),
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            CollectionDetails(snap.data?[id]),
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: ListTile(
+                                    hoverColor: Colors.grey[300],
+                                    leading: CircleAvatar(
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 20,
                                       ),
-                                    );
-                                  },
-                                  title: Text(
-                                    '${snap.data?[id].name}',
-                                    style: TextStyle(fontSize: 20.0),
-                                  ),
-                                  subtitle: Text(
-                                    'A/c: ${snap.data?[id].accountNumber}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  trailing: Container(
-                                    child: Text(
-                                        '₹ ${snap.data?[id].totalPrincipalAmount}'),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              CollectionDetails(snap.data?[id]),
+                                        ),
+                                      );
+                                    },
+                                    title: Text(
+                                      '${snap.data?[id].name}',
+                                      style: TextStyle(fontSize: 18.0),
+                                    ),
+                                    subtitle: Text(
+                                      'A/c: ${snap.data?[id].accountNumber}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    trailing: Container(
+                                      child: Text(
+                                          '₹ ${snap.data?[id].totalPrincipalAmount}'),
+                                    ),
                                   ),
                                 );
                               });
@@ -202,26 +193,11 @@ class _DepositCollectionState extends State<DepositCollection> {
                             shrinkWrap: true,
                             itemCount: snap.data?.length,
                             itemBuilder: (__, id) {
-                              Uint8List? profile = Base64Decoder()
-                                  .convert(snap.data?[id].profile ?? '');
                               return ListTile(
                                 hoverColor: Colors.grey[300],
-                                leading: snap.data?[id].profile == null
-                                    ? CircleAvatar(
-                                        child: Icon(Icons.person),
-                                      )
-                                    : Container(
-                                        width: 40,
-                                        height: 40,
-                                        //child: Image.memory(profile),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: MemoryImage(profile),
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
+                                leading: CircleAvatar(
+                                  child: Icon(Icons.person),
+                                ),
                                 onTap: () {
                                   Navigator.push(
                                     context,

@@ -1,4 +1,3 @@
-import 'package:devbynasirulahmed/screen/add_customer/addDepositCustomer.dart';
 import 'package:devbynasirulahmed/screen/apply_loan/apply_loan.dart';
 import 'package:devbynasirulahmed/screen/collection/deposit_collection/deposit_collection.dart';
 import 'package:devbynasirulahmed/screen/collection/loan_collection/loan_collection_view.dart';
@@ -43,10 +42,10 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                           height: 5,
                         ),
                         Text(
-                          'Deposit Collection',
+                          'Deposit C.',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1,
                           ),
@@ -98,10 +97,10 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                           height: 5,
                         ),
                         Text(
-                          'Loan Collection',
+                          'Loan C.',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 12,
                             letterSpacing: 1,
                             fontWeight: FontWeight.w600,
                           ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:devbynasirulahmed/constants/api_url.dart';
@@ -8,7 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class LoanApplications extends StatefulWidget {
-  const LoanApplications({Key? key}) : super(key: key);
+  LoanApplications({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _LoanApplicationsState createState() => _LoanApplicationsState();

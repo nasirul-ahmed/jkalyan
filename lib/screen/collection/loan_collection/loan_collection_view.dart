@@ -142,29 +142,37 @@ class _LoanCollectionViewState extends State<LoanCollectionView> {
                               shrinkWrap: true,
                               itemCount: snap.data?.length,
                               itemBuilder: (__, id) {
-                                return ListTile(
-                                  hoverColor: Colors.grey[300],
-                                  leading: Text(''),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            LoanCollection(snap.data?[id]),
+                                return Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: ListTile(
+                                    hoverColor: Colors.grey[300],
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              LoanCollection(snap.data?[id]),
+                                        ),
+                                      );
+                                    },
+                                    leading: CircleAvatar(
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 20,
                                       ),
-                                    );
-                                  },
-                                  title: Text(
-                                    '${snap.data?[id].custName}',
-                                    style: TextStyle(fontSize: 20.0),
-                                  ),
-                                  subtitle: Text(
-                                    'A/c: ${snap.data?[id].loanAcNo}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  trailing: Container(
-                                    child: Text(
-                                        '₹ ${snap.data?[id].totalCollection}'),
+                                    ),
+                                    title: Text(
+                                      '${snap.data?[id].custName}',
+                                      style: TextStyle(fontSize: 17.0),
+                                    ),
+                                    subtitle: Text(
+                                      'A/c: ${snap.data?[id].loanAcNo}',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    trailing: Container(
+                                      child: Text(
+                                          '₹ ${snap.data?[id].totalCollection}'),
+                                    ),
                                   ),
                                 );
                               });

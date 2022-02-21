@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
+import 'package:devbynasirulahmed/screen/passbook/loan_passbook/loan_passbook.dart';
 import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -46,6 +47,7 @@ class LoanCollection extends StatelessWidget {
                       details("Created At", doc!.createdAt?.split('T').first),
                       details("Last update", doc!.updatedAt?.split('T').first),
                       details("Interest Rate", doc!.interestRate),
+                      //Todo:
                       details("Interest Amount", doc!.loanInterest),
                       details("Collection Amount", doc!.totalCollection),
                       SizedBox(
@@ -123,6 +125,36 @@ class LoanCollection extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Material(
+                    child: Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          // color: Colors.green,
+                          borderRadius: BorderRadius.circular(30.0)),
+                      child: InkWell(
+                        enableFeedback: true,
+                        onTap: () {
+                          print("object");
+                          Navigator.push(context, MaterialPageRoute(builder: (_)=> LoanPassbook(doc)));
+                        },
+                        highlightColor: Colors.brown,
+                        hoverColor: Colors.amber,
+                        splashColor: Colors.amber,
+                        child: Center(
+                          child: Text(
+                            "Passbook",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             )
           ],

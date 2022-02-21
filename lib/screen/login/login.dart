@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
-import 'package:devbynasirulahmed/services/providers/auth_provider.dart';
+
 import 'package:devbynasirulahmed/widgets/responsive_layout.dart';
-import 'package:devbynasirulahmed/widgets/responsive_layout.dart';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -20,6 +20,7 @@ class _LoginState extends State<Login> {
 
   final TextEditingController _password = TextEditingController();
   bool isLoading = false;
+
 
   Future<dynamic?> handlePress(BuildContext context) async {
     setState(() {
@@ -49,7 +50,7 @@ class _LoginState extends State<Login> {
       print(res.statusCode);
 
       if (200 == res.statusCode) {
-        print(res.body.toString());
+        //print(res.body.toString());
         Map<String, dynamic> token = jsonDecode(res.body);
         if (token.isNotEmpty) {
           //context.read(authProvider).isLogin(true);

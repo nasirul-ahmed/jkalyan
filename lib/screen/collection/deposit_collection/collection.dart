@@ -4,8 +4,10 @@ import 'dart:typed_data';
 
 import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
+import 'package:devbynasirulahmed/screen/apply_loan/apply_loan.dart';
 import 'package:devbynasirulahmed/screen/collection/loan_collection/loan_collection.dart';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
+import 'package:devbynasirulahmed/screen/loan_applications/loan_applications.dart';
 import 'package:devbynasirulahmed/screen/passbook/passbook_customer.dart';
 
 import 'package:flutter/material.dart';
@@ -228,8 +230,6 @@ class _CollectionDetailsState extends State<CollectionDetails> {
 
     DateTime maturity = DateTime.parse(widget.doc!.maturityDate!);
 
-    Uint8List? profile = Base64Decoder().convert(widget.doc!.profile ?? '');
-
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -384,6 +384,14 @@ class _CollectionDetailsState extends State<CollectionDetails> {
             children: [
               widget.doc?.loanAccountNumber == 0
                   ? InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ApplyLoan(cust: widget.doc,),
+                          ),
+                        );
+                      },
                       child: Center(
                           child: Center(
                         child: Text(

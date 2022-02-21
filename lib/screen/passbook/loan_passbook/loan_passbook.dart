@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/loan_customer.dart';
 import 'package:devbynasirulahmed/models/loan_transaction.dart';
+import 'package:devbynasirulahmed/services/date.format.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,7 @@ class LoanPassbook extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Customer Passbook'),
+        title: Text('Loan Passbook'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -25,7 +26,7 @@ class LoanPassbook extends StatelessWidget {
             ),
             Card(
               child: Container(
-                //padding: EdgeInsets.only(left: 10, right: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 height: 130,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.red,
@@ -42,14 +43,14 @@ class LoanPassbook extends StatelessWidget {
                             'Name :  ${doc!.custName}',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            'Opening Date :  ${doc!.createdAt.toString().split("T")[0]}',
+                            'Loan A/c :  ${doc!.loanAcNo}',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w500),
                           ),
                         ],
@@ -71,14 +72,14 @@ class LoanPassbook extends StatelessWidget {
                             'Loan Amount :  ${doc!.loanAmount}',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            'Deposit A/c :  ${doc!.depositAcNo}',
+                            'Opening Date :  ${formatDate(doc!.createdAt)}',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w500),
                           ),
                         ],
@@ -97,14 +98,14 @@ class LoanPassbook extends StatelessWidget {
                             'Interest :  ${((doc!.interestRate! * doc!.dueDays! * doc!.loanAmount!) / 30 / 100)}',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            'Loan A/c :  ${doc!.loanAcNo}',
+                            'Deposit A/c :  ${doc!.depositAcNo}',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w500),
                           ),
                         ],
@@ -154,26 +155,22 @@ class LoanPassbook extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          columnSpacing: 25,
+          horizontalMargin: 5,
           columns: [
             DataColumn(label: Text('C. Id', style: style1)),
             DataColumn(label: Text('Date', style: style1)),
-            DataColumn(label: Text('Daily Collection', style: style1)),
-            DataColumn(label: Text('Total Collection', style: style1)),
+            DataColumn(label: Text('Daily C.', style: style1)),
+            DataColumn(label: Text('Total C.', style: style1)),
           ],
           rows: list!.map((LoanTransactionsModel document) {
-            //var date = DateTime.parse(document.createdAt.toString());
-            final input = new DateFormat('yyyy-MM-dd');
-            final output = new DateFormat('dd-MM-yyyy');
-            final date =
-                input.parse(document.createdAt.toString().split("T")[0]);
-            final finalDate = output.format(date);
             return DataRow(cells: [
               DataCell(Text(
                 '${document.id}',
                 style: style,
               )),
               DataCell(Text(
-                '${finalDate}',
+                '${formatDate(document.createdAt)}',
                 style: style,
               )),
               DataCell(Text(
@@ -208,7 +205,7 @@ class LoanPassbook extends StatelessWidget {
       });
       if (200 == res.statusCode) {
         final parsed = jsonDecode(res.body).cast<Map<String, dynamic>>();
-
+        print(parsed);
         return parsed
             .map<LoanTransactionsModel>(
                 (json) => LoanTransactionsModel.fromJson(json))
