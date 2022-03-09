@@ -14,6 +14,8 @@ class LoanPassbook extends StatelessWidget {
   static const id = 'PassbookCustomer';
   @override
   Widget build(BuildContext context) {
+    var date = DateTime.parse(doc!.updatedAt ?? "");
+    var date2 = DateTime.now().difference(date).inDays;
     return Scaffold(
       appBar: AppBar(
         title: Text('Loan Passbook'),
@@ -95,7 +97,7 @@ class LoanPassbook extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Interest :  ${((doc!.interestRate! * doc!.dueDays! * doc!.loanAmount!) / 30 / 100)}',
+                            'Interest :  ${((doc!.interestRate! * doc!.remLoanAmnt!) / 30 / 100) * date2 + doc!.loanInterest!}',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 11,

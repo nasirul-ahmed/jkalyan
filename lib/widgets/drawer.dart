@@ -406,10 +406,38 @@ class _CustomDrawerState extends State<CustomDrawer> {
             //       style: TextStyle(fontSize: 16, color: Colors.black),
             //     ),
             //     onTap: () {
+            //       //TextEditingController x = TextEditingController();
+            //       // showDialog(
+            //       //     context: context,
+            //       //     builder: (_) {
+            //       //       return AlertDialog(
+            //       //           title: Text("Enter a account no."),
+            //       //           content: TextField(
+            //       //             keyboardType: TextInputType.number,
+            //       //             controller: x,
+            //       //           ),
+            //       //           actions: [
+            //       //             MaterialButton(
+            //       //               onPressed: () {
+            //       //                 if (x.text.isNotEmpty) {
+            //       //                   Navigator.push(
+            //       //                     context,
+            //       //                     MaterialPageRoute(
+            //       //                       builder: (_) => UploadDocs(
+            //       //                         accountNumber: int.parse(x.text),
+            //       //                       ),
+            //       //                     ),
+            //       //                   );
+            //       //                 }
+            //       //               },
+            //       //               child: Text("Process & upload"),
+            //       //             )
+            //       //           ]);
+            //       //     });
             //       // Update the state of the app.-8
             //       // ...
-            //       Navigator.push(
-            //           context, MaterialPageRoute(builder: (_) => UploadDocs()));
+            //       // Navigator.push(
+            //       //     context, MaterialPageRoute(builder: (_) => showDialog(context: context, builder: builder) ));
             //     },
             //   ),
             // ),

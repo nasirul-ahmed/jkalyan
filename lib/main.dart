@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:devbynasirulahmed/screen/index.dart';
 import 'package:devbynasirulahmed/services/last_customer.dart';

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:devbynasirulahmed/constants/api_url.dart';
+import 'package:devbynasirulahmed/screen/account_register/account_register_view.dart';
 import 'package:devbynasirulahmed/screen/upload/upload_docs2.dart';
 import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:dio/dio.dart';
@@ -59,8 +60,6 @@ class _UploadDocsState extends State<UploadDocs> {
           child: Icon(Icons.upload),
         ),
         body: ListView(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
               height: 20,
@@ -113,15 +112,7 @@ class _UploadDocsState extends State<UploadDocs> {
                         width: screen.width * 0.5,
                         color: Colors.green,
                         child: InkWell(
-                          onTap: () {
-                            uploadPhoto(context);
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => UploadDocs2(),
-                              ),
-                            );
-                          },
+                          onTap: () => uploadPhoto(context),
                           child: Center(
                             child: Text(
                               "Upload",
@@ -148,7 +139,7 @@ class _UploadDocsState extends State<UploadDocs> {
     FormData formData = FormData.fromMap({
       "image": await MultipartFile.fromFile(_image!.path,
           filename: filename, contentType: MediaType("image", "png")),
-      "accountNumber": 1,
+      "accountNumber": widget.accountNumber,
     });
 
     try {
@@ -161,6 +152,7 @@ class _UploadDocsState extends State<UploadDocs> {
 
       if (200 == res.statusCode) {
         print(res.data);
+
         Fluttertoast.showToast(
           msg: "Profile Uploaded",
           toastLength: Toast.LENGTH_SHORT,
@@ -170,8 +162,13 @@ class _UploadDocsState extends State<UploadDocs> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        //Navigator.pop(context);
-        // successDialog(context);
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AccountRegisterView(),
+          ),
+        );
       }
     } catch (e) {
       print(e);

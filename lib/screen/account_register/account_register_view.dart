@@ -132,6 +132,6 @@ class _AccountRegisterViewState extends State<AccountRegisterView> {
 
   navigate(Customer? doc) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (_) => AccountRegister(doc)));
+        context, MaterialPageRoute(builder: (_) => AccountRegister(doc: doc!)));
   }
 }

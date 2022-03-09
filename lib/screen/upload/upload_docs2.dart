@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:devbynasirulahmed/constants/api_url.dart';
+import 'package:devbynasirulahmed/screen/account_register/account_register_view.dart';
+
+import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -128,6 +131,7 @@ class _UploadDocs2State extends State<UploadDocs2> {
   }
 
   uploadPhoto(BuildContext context) async {
+    upLoadingDialog(context);
     Dio dio = Dio();
     String uri = '$janaklyan/api/collector/uploads-signature';
     String filename = _image!.path.split('/').last;
@@ -156,6 +160,10 @@ class _UploadDocs2State extends State<UploadDocs2> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+
+        Navigator.pop(context);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (__) => AccountRegisterView()));
       }
     } catch (e) {
       print(e);

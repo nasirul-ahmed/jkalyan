@@ -28,8 +28,6 @@ class _DashBoardState extends State<DashBoard> {
     Uri url = Uri.parse("$janaklyan/api/collector/todays-deposit-collection");
 
     try {
-      print("${getDate.year}-${getDate.month}-${getDate.day}");
-      print(id);
       var res = await http.post(
         url,
         body: jsonEncode(<String, dynamic>{
@@ -65,8 +63,6 @@ class _DashBoardState extends State<DashBoard> {
     Uri url = Uri.parse("$janaklyan/api/collector/todays-loan-collection");
 
     try {
-      print(token);
-      print(id);
       var res = await http.post(
         url,
         body: jsonEncode(<String, dynamic>{
@@ -150,7 +146,6 @@ class _DashBoardState extends State<DashBoard> {
         padding: EdgeInsets.all(8),
         child: Column(
           children: [
-            
             mobileViewDashboard(context, regularAmount, loanAmount,
                 totalCustomers, totalLoanCustomers)
           ],

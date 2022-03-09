@@ -33,27 +33,11 @@ class _SearchCustomerState extends State<SearchCustomer> {
                 shrinkWrap: true,
                 itemCount: snap.data?.length,
                 itemBuilder: (__, id) {
-                  print(snap.data?[id].profile ?? 'y');
-                  Uint8List? profile =
-                      Base64Decoder().convert(snap.data?[id].profile ?? '');
                   return ListTile(
                     hoverColor: Colors.grey[300],
-                    leading: snap.data?[id].profile == null
-                        ? CircleAvatar(
-                            child: Icon(Icons.person),
-                          )
-                        : Container(
-                            width: 40,
-                            height: 40,
-                            //child: Image.memory(profile),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: MemoryImage(profile),
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
+                    leading: CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
                     onTap: () {
                       widget.callback3(snap.data?[id]);
                     },
@@ -91,80 +75,65 @@ class _SearchCustomerState extends State<SearchCustomer> {
               ),
             );
         });
+    var futureBuilder2 = FutureBuilder<List<Customer>>(
+      future: widget.voidCallback2(),
+      builder: (_, snap) {
+        if (snap.hasError) {
+          print(snap.error);
+          return Text('Something Wrong');
+        } else if (snap.hasData) {
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snap.data?.length,
+              itemBuilder: (__, id) {
+                return ListTile(
+                  hoverColor: Colors.grey[300],
+                  leading: CircleAvatar(
+                    child: Icon(Icons.person),
+                  ),
+                  onTap: () {
+                    widget.callback3(snap.data?[id]);
+                  },
+                  title: Text(
+                    '${snap.data?[id].name}',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  subtitle: Text(
+                    'A/c: ${snap.data?[id].accountNumber}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  trailing: snap.data?[id].loanAccountNumber == 0
+                      ? Container(
+                          child: Text('₹ ${snap.data?[id].totalCollection}'),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text('₹ ${snap.data?[id].totalCollection}'),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                                'loan a/c : ${snap.data?[id].loanAccountNumber}'),
+                          ],
+                        ),
+                );
+              });
+        } else {
+          return SizedBox(
+            //alignment: Alignment.center,
+            //width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 1.4,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
     return widget.query.isNotEmpty
         ? Flexible(child: futureBuilder)
         : Flexible(
-            child: FutureBuilder<List<Customer>>(
-              future: widget.voidCallback2(),
-              builder: (_, snap) {
-                if (snap.hasError) {
-                  print(snap.error);
-                  return Text('Something Wrong');
-                } else if (snap.hasData) {
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snap.data?.length,
-                      itemBuilder: (__, id) {
-                        Uint8List? profile = Base64Decoder()
-                            .convert(snap.data?[id].profile ?? '');
-                        return ListTile(
-                          hoverColor: Colors.grey[300],
-                          leading: snap.data?[id].profile == null
-                              ? CircleAvatar(
-                                  child: Icon(Icons.person),
-                                )
-                              : Container(
-                                  width: 40,
-                                  height: 40,
-                                  //child: Image.memory(profile),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: MemoryImage(profile),
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                          onTap: () {
-                            widget.callback3(snap.data?[id]);
-                          },
-                          title: Text(
-                            '${snap.data?[id].name}',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                          subtitle: Text(
-                            'A/c: ${snap.data?[id].accountNumber}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          trailing: snap.data?[id].loanAccountNumber == 0
-                              ? Container(
-                                  child: Text(
-                                      '₹ ${snap.data?[id].totalCollection}'),
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text('₹ ${snap.data?[id].totalCollection}'),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                        'loan a/c : ${snap.data?[id].loanAccountNumber}'),
-                                  ],
-                                ),
-                        );
-                      });
-                } else {
-                  return SizedBox(
-                    //alignment: Alignment.center,
-                    //width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 1.4,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-              },
-            ),
+            child: futureBuilder2,
           );
   }
 }

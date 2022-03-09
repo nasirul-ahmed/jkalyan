@@ -10,19 +10,21 @@ LoanCustomer customerFromJson(String str) =>
 String customerToJson(LoanCustomer data) => json.encode(data.toJson());
 
 class LoanCustomer {
-  LoanCustomer(
-      {this.id,
-      this.collectorId,
-      this.createdAt,
-      this.custName,
-      this.depositAcNo,
-      this.loanAcNo,
-      this.loanAmount,
-      this.loanInterest,
-      this.totalCollection,
-      this.dueDays,
-      this.interestRate,
-      this.updatedAt});
+  LoanCustomer({
+    this.id,
+    this.collectorId,
+    this.createdAt,
+    this.custName,
+    this.depositAcNo,
+    this.loanAcNo,
+    this.loanAmount,
+    this.loanInterest,
+    this.totalCollection,
+    this.dueDays,
+    this.interestRate,
+    this.updatedAt,
+    this.remLoanAmnt,
+  });
 
   final int? id;
   final int? loanAcNo;
@@ -36,20 +38,23 @@ class LoanCustomer {
   final int? dueDays;
   final num? interestRate;
   final String? updatedAt;
+  final num? remLoanAmnt;
 
   factory LoanCustomer.fromJson(Map<String, dynamic> json) => LoanCustomer(
-      id: json["id"],
-      loanAcNo: json["loanAcNo"],
-      depositAcNo: json["depositAcNo"],
-      custName: json["custName"],
-      collectorId: json["collectorId"],
-      createdAt: json["createdAt"],
-      totalCollection: json["totalCollection"],
-      loanAmount: json["loanAmount"],
-      loanInterest: json["loanInterest"],
-      dueDays: json["dueDays"],
-      interestRate: json["interestRate"],
-      updatedAt: json["updatedAt"]);
+        id: json["id"],
+        loanAcNo: json["loanAcNo"],
+        depositAcNo: json["depositAcNo"],
+        custName: json["custName"],
+        collectorId: json["collectorId"],
+        createdAt: json["createdAt"],
+        totalCollection: json["totalCollection"],
+        loanAmount: json["loanAmount"],
+        loanInterest: json["loanInterest"],
+        dueDays: json["dueDays"],
+        interestRate: json["interestRate"],
+        updatedAt: json["updatedAt"],
+        remLoanAmnt: json["remLoanAmnt"],
+      );
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -63,6 +68,7 @@ class LoanCustomer {
         "loanInterest": loanInterest,
         "dueDays": dueDays,
         "interestRate": interestRate,
-        "updatedAt": updatedAt
+        "updatedAt": updatedAt,
+        "remLoanAmnt": remLoanAmnt
       };
 }
