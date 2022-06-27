@@ -1,3 +1,4 @@
+import 'package:devbynasirulahmed/screen/account_register/account_register_view.dart';
 import 'package:devbynasirulahmed/screen/apply_loan/apply_loan.dart';
 import 'package:devbynasirulahmed/screen/collection/deposit_collection/deposit_collection.dart';
 import 'package:devbynasirulahmed/screen/collection/loan_collection/loan_collection_view.dart';
@@ -5,11 +6,14 @@ import 'package:devbynasirulahmed/screen/commission/commission.dart';
 import 'package:devbynasirulahmed/screen/maturity/maturity_view.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/deposit/deposit_transfer_view.dart';
 import 'package:devbynasirulahmed/screen/transafer_amount/loan/transfer_loan_view.dart';
+import 'package:devbynasirulahmed/services/loac_customer.dart';
 import 'package:flutter/material.dart';
 
 Widget mobileViewDashboard(BuildContext context, int? regularAmount,
     int? loanAmount, int? totalCustomers, int? totalLoanCustomers) {
+      
   var screen = MediaQuery.of(context).size;
+ 
   return Expanded(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -253,6 +257,19 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                                   letterSpacing: 1.2,
                                 ),
                               ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                totalCustomers == null
+                                    ? '(0)'
+                                    : '($totalLoanCustomers)',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -314,8 +331,8 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Row(
-                            //mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.send_and_archive_sharp,
@@ -415,7 +432,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Row(
                             //mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.send_rounded,
@@ -488,7 +505,12 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, ApplyLoan.id);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AccountRegisterView(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 50,
@@ -496,6 +518,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Row(
+                            //mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.fast_forward,
@@ -506,7 +529,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                                 width: 15,
                               ),
                               Text(
-                                "Apply Loan",
+                                "Account Register",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -528,7 +551,7 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, Commission.id);
+                        Navigator.pushNamed(context, CommissionView.id);
                       },
                       child: Container(
                         height: 50,
@@ -536,8 +559,8 @@ Widget mobileViewDashboard(BuildContext context, int? regularAmount,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Row(
-                            //mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                             children: [
                               Icon(
                                 Icons.attach_money,

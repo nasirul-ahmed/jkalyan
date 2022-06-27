@@ -17,14 +17,14 @@ class Index extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Splash(),
-      //initialRoute: '/splash',
+      // initialRoute: '/splash',
       routes: {
         '/dashboard': (context) => DashBoard(),
         '/login': (context) => Login(),
         DashBoard.id: (context) => DashBoard(),
         TransactionsView.id: (context) => TransactionsView(),
         TransferDeposit.id: (_) => TransferDeposit(),
-        Commission.id: (_) => Commission(),
+        CommissionView.id: (_) => CommissionView(),
         SearchDeposit.id: (_) => SearchDeposit(),
         DepositTransferView.id: (_) => DepositTransferView(),
         TransferLoanView.id: (_) => TransferLoanView(),

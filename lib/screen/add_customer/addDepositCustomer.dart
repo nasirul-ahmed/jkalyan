@@ -1,6 +1,5 @@
 import 'package:devbynasirulahmed/screen/add_customer/add_cust_mobile_view.dart';
-import 'package:devbynasirulahmed/widgets/max_width_container.dart';
-import 'package:devbynasirulahmed/widgets/responsive_layout.dart';
+import 'package:devbynasirulahmed/screen/upload/upload_docs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -15,9 +14,9 @@ class AddDepositCustomer extends StatelessWidget {
           style: TextStyle(fontSize: 16),
         ),
       ),
-      body: Scrollbar(
-        child: AddCustomerMV(),
-      ),
+      body:
+        AddDepositCustomer(),
+      
     );
   }
 }

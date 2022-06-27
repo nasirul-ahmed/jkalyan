@@ -1,14 +1,16 @@
-import 'dart:convert';
-import 'package:devbynasirulahmed/models/customer.dart';
+import 'dart:io';
+
 import 'package:devbynasirulahmed/screen/add_customer/review_mobile.dart';
 import 'package:devbynasirulahmed/widgets/customTextField.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
-import 'package:http/http.dart' as http;
 
 class AddCustomerMV extends StatefulWidget {
+  AddCustomerMV({Key? key, this.file1, this.file2}) : super(key: key);
+
+  File? file1, file2;
+
   @override
-  _AddCustomerMVState createState() => _AddCustomerMVState();
+  State<AddCustomerMV> createState() => _AddCustomerMVState();
 }
 
 class _AddCustomerMVState extends State<AddCustomerMV> {
@@ -25,55 +27,88 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
   TextEditingController nomineePhone = TextEditingController();
   TextEditingController relation = TextEditingController();
   TextEditingController nomineeFatherName = TextEditingController();
-  TextEditingController rateOfInterest = TextEditingController();
   TextEditingController nomineeAge = TextEditingController();
   TextEditingController installmentAmount = TextEditingController();
   TextEditingController age = TextEditingController();
   TextEditingController depositAmount = TextEditingController();
 
-  int totalInstallments = 630;
-  String accountType = '';
-  String maturityDate = '';
   int totalPrincipalAmount = 0;
+  int totalInstallments = 630;
+  double interestAmount = 0;
+  double totalMaturityAmount = 0;
+  String accountType = 'daily';
+  String maturityDate = '';
   String createdAt = '';
-  DateTime? mDate;
-
+  int rateOfInterest = 0;
   String? dob = '';
 
   bool isLoading = false;
 
-  Future<Customer?> getAccountNo() async {
-    Uri url = Uri.parse("https://sanchay-new.herokuapp.com/api/agents/account");
-    try {
-      var res = await http.get(url, headers: {"Accept": "application/json"});
-      if (200 == res.statusCode) {
-        // final parsed = jsonDecode(res.body).cast<Map<String, dynamic>>();
+  Future<void> handleClick(BuildContext context) async {
+    if (_key.currentState!.validate()) {
+      print('createdAt: ' + createdAt);
+      setState(() {
+        isLoading = true;
+      });
 
-        // return parsed.map<Customer>((json) => Customer.fromJson(json));
-        Map<String, dynamic> customerMap = jsonDecode(res.body);
-        var customer = Customer.fromJson(customerMap);
-        print(customer.accountNumber.toString());
-        return customer;
-      }
-    } catch (e) {
-      throw e;
+      setState(() {
+        totalPrincipalAmount =
+            totalInstallments * int.parse(installmentAmount.text);
+      });
+      setState(() {
+        interestAmount = totalPrincipalAmount * rateOfInterest / 100;
+      });
+
+      setState(() {
+        maturityDate = DateTime.now()
+            .add(Duration(days: accountType == "yearly" ? 360 : 630))
+            .toString();
+      });
+
+      setState(() {
+        totalMaturityAmount = totalPrincipalAmount + interestAmount;
+      });
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReviewMobile(
+              name.text,
+              fatherName.text,
+              address.text,
+              int.parse(pinCode.text),
+              occupation.text,
+              nomineeName.text,
+              nomineeAddress.text,
+              int.parse(nomineePhone.text),
+              relation.text,
+              nomineeFatherName.text,
+              int.parse(nomineeAge.text),
+              rateOfInterest,
+              totalInstallments,
+              int.parse(installmentAmount.text),
+              maturityDate,
+              totalPrincipalAmount,
+              interestAmount,
+              totalMaturityAmount,
+              int.parse(phone.text),
+              accountType,
+              age.text,
+              createdAt,
+              0,
+              widget.file1!,
+              widget.file2!),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Future<void> _selectDOB(BuildContext context) async {
-    //   final DateTime? picked = await showDatePicker(
-    //       context: context,
-    //       initialDate: DateTime.now(),
-    //       firstDate: DateTime(2015, 8),
-    //       lastDate: DateTime(2101));
-    //   if (picked != null) {
-    //     setState(() {
-    //       dob = "${picked.year}-${picked.month}-${picked.day}";
-    //     });
-    //   }
-    // }
     Future<void> _selectCreatedAt(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
@@ -83,269 +118,200 @@ class _AddCustomerMVState extends State<AddCustomerMV> {
       );
       if (picked != null) {
         setState(() {
-          createdAt = "${picked.year}-${picked.month}-${picked.day}";
+          createdAt = picked.toString();
         });
       }
     }
 
-    return isLoading
-        ? Center(
-            child: Center(child: CircularProgressIndicator()),
-          )
-        : Form(
-            key: _key,
-            child: ListView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Text(
-                    'Customer\'s Basic Details',
-                    style: TextStyle(fontSize: 20),
+    return Scaffold(
+      body: isLoading
+          ? Center(
+              child: Center(child: CircularProgressIndicator()),
+            )
+          : Form(
+              key: _key,
+              child: ListView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                children: [
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                customTextField('Customer Name', TextInputType.text, name),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Father Name', TextInputType.text, fatherName),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Age', TextInputType.number, age),
-                SizedBox(height: 8),
-                customTextField('Address', TextInputType.text, address),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Pin Code', TextInputType.number, pinCode),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Phone/Mobile', TextInputType.phone, phone),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Occupation', TextInputType.text, occupation),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField(
-                    'Nominee Name', TextInputType.text, nomineeName),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField(
-                    'Nominee Address', TextInputType.text, nomineeAddress),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField(
-                    'Nominee Phone', TextInputType.phone, nomineePhone),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Relation', TextInputType.text, relation),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Nominee Father\'s Name', TextInputType.text,
-                    nomineeFatherName),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Nominee Age', TextInputType.text, nomineeAge),
-                SizedBox(
-                  height: 8,
-                ),
-                customTextField('Installment Amounts', TextInputType.number,
-                    installmentAmount),
-                SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: DropdownButtonFormField<String>(
-                    onChanged: (type) {
-                      setState(() {
-                        accountType = type ?? 'daily';
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    hint: Text('Account Type'),
-                    isExpanded: true,
-                    isDense: true,
-                    items: [
-                      DropdownMenuItem(
-                        value: 'daily',
-                        child: Text('Daily'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'weekly',
-                        child: Text('Weekly'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'monthly',
-                        child: Text('Monthly'),
-                      ),
-                    ],
-                    autofocus: true,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: InkWell(
-                    onTap: () => _selectCreatedAt(context),
-                    child: IgnorePointer(
-                      child: TextField(
-                        //controller: maturityDate,
-                        decoration: InputDecoration(
-                          labelText:
-                              createdAt.isEmpty ? 'Created At' : createdAt,
-                          hintText: (createdAt),
-                        ),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      'Customer\'s Basic Details',
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Material(
-                    color: Colors.teal[700],
-                    borderRadius: BorderRadius.circular(30.0),
-                    elevation: 5.0,
-                    child: MaterialButton(
-                      //color: Colors.teal,
-                      onPressed: () async {
-                        if (_key.currentState!.validate()) {
-                          print('createdAt: ' + createdAt);
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                          //print(customerMap);
-
-                          DateTime creationDate = DateTime.now();
-
-                          setState(() {
-                            // createdAt =
-                            //     "${creationDate.year}-${creationDate.month}-${creationDate.day}";
-                            mDate = DateTime(creationDate.year,
-                                creationDate.month + 21, creationDate.day);
-                          });
-                          print(mDate.toString());
-                          var random = new Random();
-                          int accountNumber = random.nextInt(9000) + 999;
-
-                          if ('daily' == accountType) {
-                            setState(() {
-                              totalPrincipalAmount =
-                                  630 * int.parse(installmentAmount.text);
+                  SizedBox(
+                    height: 20,
+                  ),
+                  customTextField('Customer Name', TextInputType.text, name),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField(
+                      'Father Name', TextInputType.text, fatherName),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField('Age', TextInputType.number, age),
+                  SizedBox(height: 8),
+                  customTextField('Address', TextInputType.text, address),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField('Pin Code', TextInputType.number, pinCode),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField('Phone/Mobile', TextInputType.phone, phone),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField('Occupation', TextInputType.text, occupation),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField(
+                      'Nominee Name', TextInputType.text, nomineeName),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField(
+                      'Nominee Address', TextInputType.text, nomineeAddress),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField(
+                      'Nominee Phone', TextInputType.phone, nomineePhone),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField('Relation', TextInputType.text, relation),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField('Nominee Father\'s Name', TextInputType.text,
+                      nomineeFatherName),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField(
+                      'Nominee Age', TextInputType.text, nomineeAge),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  customTextField('Installment Amounts', TextInputType.number,
+                      installmentAmount),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: DropdownButtonFormField<String>(
+                      onChanged: (type) {
+                        setState(() {
+                          switch (type) {
+                            case "daily":
+                              accountType = type ?? "daily";
+                              rateOfInterest = 10;
                               totalInstallments = 630;
-                            });
-                          } else if ('weekly' == accountType) {
-                            setState(() {
-                              totalPrincipalAmount =
-                                  90 * int.parse(installmentAmount.text);
+                              break;
+                            case "weekly":
+                              accountType = type ?? "weekly";
+                              rateOfInterest = 9;
                               totalInstallments = 90;
-                            });
-                          } else {
-                            setState(() {
-                              totalPrincipalAmount =
-                                  21 * int.parse(installmentAmount.text);
+                              break;
+                            case "monthly":
+                              accountType = type ?? "monthly";
+                              rateOfInterest = 8;
                               totalInstallments = 21;
-                            });
+                              break;
+                            case "yearly":
+                              accountType = type ?? "yearly";
+                              rateOfInterest = 4;
+                              totalInstallments = 360;
+                              break;
                           }
-
-                          maturityDate = DateTime.now()
-                              .add(Duration(days: 630))
-                              .toString()
-                              .split(" ")[0];
-                          //'${mDate!.year}-${mDate!.month}-${mDate!.day} ';
-
-                          // int totalPrincipalAmount =
-                          //     (int.parse(totalInstallments.text.trim()) *
-                          //         int.parse(installmentAmount.text.trim()));
-                          // double totalInterestAmount = totalPrincipalAmount *
-                          //     (int.parse(rateOfInterest.text) / 100);
-                          double totalMaturityAmount =
-                              double.parse(totalPrincipalAmount.toString());
-
-                          // String createdAt =
-                          //     "${creationDate.year}-${creationDate.month}-${creationDate.day}";
-                          // print(createdAt);
-
-                          setState(() {
-                            isLoading = false;
-                          });
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ReviewMobile(
-                                name.text,
-                                fatherName.text,
-                                address.text,
-                                int.parse(pinCode.text),
-                                occupation.text,
-                                nomineeName.text,
-                                nomineeAddress.text,
-                                int.parse(nomineePhone.text),
-                                relation.text,
-                                nomineeFatherName.text,
-                                int.parse(nomineeAge.text),
-                                //int.parse(rateOfInterest.text),
-                                totalInstallments,
-                                int.parse(installmentAmount.text),
-                                maturityDate,
-                                totalPrincipalAmount,
-                                //totalInterestAmount,
-                                totalMaturityAmount,
-                                int.parse(phone.text),
-                                accountType,
-                                age.text,
-                                createdAt,
-                                //int.parse(depositAmount.text),
-                              ),
-                            ),
-                          );
-                        }
+                        });
                       },
-                      minWidth: 200.0,
-                      height: 60.0,
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                      hint: Text('Account Type'),
+                      isExpanded: true,
+                      isDense: true,
+                      items: [
+                        DropdownMenuItem(
+                          value: 'daily',
+                          child: Text('Daily'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'weekly',
+                          child: Text('Weekly'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'monthly',
+                          child: Text('Monthly'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'yearly',
+                          child: Text('Yearly'),
+                        ),
+                      ],
+                      autofocus: true,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: InkWell(
+                      onTap: () => _selectCreatedAt(context),
+                      child: IgnorePointer(
+                        child: TextField(
+                          //controller: maturityDate,
+                          decoration: InputDecoration(
+                            labelText:
+                                createdAt.isEmpty ? 'Created At' : createdAt,
+                            hintText: (createdAt),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Material(
+                      color: Colors.teal[700],
+                      borderRadius: BorderRadius.circular(30.0),
+                      elevation: 5.0,
+                      child: MaterialButton(
+                        //color: Colors.teal,
+                        onPressed: () {
+                          handleClick(context);
+                        },
+                        minWidth: 200.0,
+                        height: 60.0,
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  )
+                ],
+              ),
             ),
-          );
+    );
   }
 }
-
-// Widget AddCustomeMV(context, VoidCallback onPressed) {
-  
-//   //
-
-  
-// }

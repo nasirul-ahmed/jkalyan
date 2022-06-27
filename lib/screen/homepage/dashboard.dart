@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/homepage/mobile_view_dashboard.dart';
+import 'package:devbynasirulahmed/services/loac_customer.dart';
 import 'package:devbynasirulahmed/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,10 @@ class _DashBoardState extends State<DashBoard> {
   int? totalCustomers;
   int? totalLoanCustomers;
   DateTime getDate = DateTime.now();
+
+  // LoanCustomerServices2 ls= LoanCustomerServices2();
+      
+      // num totalLoanCustomers = 0;
 
   getBalance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -112,13 +117,37 @@ class _DashBoardState extends State<DashBoard> {
       throw e;
     }
   }
+  totalLoanCustomer() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    final url = Uri.parse(
+        '$janaklyan2/api/collector/total/loan/customers/${_prefs.getInt('collectorId')}');
+
+    try {
+      print(_prefs.getInt('collectorId'));
+      var res = await http.get(url, headers: {
+        "Content-Type": "application/json",
+        'Accept': "*/*",
+        "Authorization": "Bearer ${_prefs.getString('token')}"
+      });
+      if (200 == res.statusCode) {
+        var jsondata = jsonDecode(res.body);
+        print(jsondata);
+        setState(() {
+          totalLoanCustomers = jsondata['totalLoanCustomers'];
+        });
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
 
   @override
   void initState() {
-    super.initState();
+   super.initState();
     getBalance();
     getLoanBalance();
     totalCustomer();
+    totalLoanCustomer();
   }
 
   @override

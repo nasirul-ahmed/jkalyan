@@ -1,13 +1,17 @@
+import 'dart:io';
+import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/models/api_response.dart';
 import 'package:devbynasirulahmed/models/customer.dart';
 import 'package:devbynasirulahmed/screen/add_customer/editable_details_mobile.dart';
-import 'package:devbynasirulahmed/screen/upload/upload_docs.dart';
-import 'package:devbynasirulahmed/screen/upload/upload_profile.dart';
+import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 import 'package:devbynasirulahmed/services/add_customer_service.dart';
+import 'package:devbynasirulahmed/services/date.format.dart';
 import 'package:devbynasirulahmed/services/last_customer.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ReviewMobile extends StatefulWidget {
   ReviewMobile(
@@ -22,18 +26,20 @@ class ReviewMobile extends StatefulWidget {
     this.relation,
     this.nomineeFatherName,
     this.nomineeAge,
-    //this.rateOfInterest,
+    this.rateOfInterest,
     this.totalInstallments,
     this.installmentAmount,
     this.maturityDate,
     this.totalPrincipalAmount,
-    //this.totalInterestAmount,
+    this.totalInterestAmount,
     this.totalMaturityAmount,
     this.phone,
     this.accountType,
     this.age,
     this.createdAt,
-    //this.depositAmount
+    this.depositAmount,
+    this.file1,
+    this.file2,
   );
 
   final String name;
@@ -49,19 +55,21 @@ class ReviewMobile extends StatefulWidget {
   final String relation;
   final String nomineeFatherName;
   final int nomineeAge;
-  //final int rateOfInterest;
+  final int rateOfInterest;
   final int totalInstallments;
   final int installmentAmount;
   final String maturityDate;
   final int totalPrincipalAmount;
-  // final double totalInterestAmount;
+  final double totalInterestAmount;
   final double totalMaturityAmount;
 
   final int phone;
   final String accountType;
   final String age;
   final String createdAt;
-  //final int depositAmount;
+  final int depositAmount;
+
+  File file1, file2;
 
   @override
   _ReviewMobileState createState() => _ReviewMobileState();
@@ -172,8 +180,8 @@ class _ReviewMobileState extends State<ReviewMobile> {
                   EditableDetailsMobile(
                       'Nominee Father', widget.nomineeFatherName),
                   EditableDetailsMobile('Nominee Age', widget.nomineeAge),
-                  // EditableDetailsMobile(
-                  //     'Rate of Interest', widget.rateOfInterest),
+                  EditableDetailsMobile(
+                      'Rate of Interest', widget.rateOfInterest),
                   EditableDetailsMobile(
                       'Total Installments', widget.totalInstallments),
                   EditableDetailsMobile(
@@ -181,14 +189,16 @@ class _ReviewMobileState extends State<ReviewMobile> {
 
                   EditableDetailsMobile(
                       'Principal Amount', widget.totalPrincipalAmount),
-                  // EditableDetailsMobile(
-                  //     'Interest Amount', widget.totalInterestAmount),
+                  EditableDetailsMobile(
+                      'Interest Amount', widget.totalInterestAmount),
                   EditableDetailsMobile(
                       'Maturity Amount', widget.totalMaturityAmount),
                   EditableDetailsMobile('Age', widget.age),
                   EditableDetailsMobile('Account Type', widget.accountType),
-                  EditableDetailsMobile('Created At', widget.createdAt),
-                  EditableDetailsMobile('Maturity Date', widget.maturityDate),
+                  EditableDetailsMobile(
+                      'Created At', formatDate(widget.createdAt)),
+                  EditableDetailsMobile(
+                      'Maturity Date', formatDate(widget.maturityDate)),
                   //EditableDetailsMobile('First Deposit', widget.depositAmount),
                   SizedBox(height: 30),
                   Padding(
@@ -237,13 +247,16 @@ class _ReviewMobileState extends State<ReviewMobile> {
                                 widget.relation,
                                 widget.nomineeFatherName,
                                 widget.createdAt,
+                                widget.rateOfInterest,
                                 widget.totalInstallments,
                                 widget.installmentAmount,
                                 widget.totalPrincipalAmount,
+                                widget.totalInterestAmount,
                                 widget.totalMaturityAmount,
                                 widget.maturityDate,
                                 widget.accountType,
                                 widget.nomineeAge,
+                                widget.depositAmount,
                               );
 
                               Fluttertoast.showToast(
@@ -257,16 +270,17 @@ class _ReviewMobileState extends State<ReviewMobile> {
                                 fontSize: 16.0,
                               );
 
+                              uploadPhoto(
+                                  widget.file1, customer.accountNumber!, true);
+                              uploadPhoto(
+                                  widget.file2, customer.accountNumber!, false);
                               setState(() {
                                 isLoading = false;
                               });
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => UploadDocs(
-                                      accountNumber: customer.accountNumber,
-                                    ),
-                                  ),
+                                      builder: (context) => DashBoard()),
                                   (route) => false);
                             },
                             child: Text(
@@ -289,5 +303,43 @@ class _ReviewMobileState extends State<ReviewMobile> {
         },
       ),
     );
+  }
+
+  uploadPhoto(File _image, int accountNumber, bool isProfile) async {
+    Dio dio = Dio();
+    String uri = isProfile
+        ? '$janaklyan/api/collector/uploads-profile'
+        : "$janaklyan/api/collector/uploads-signature";
+    String filename = _image.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(_image.path,
+          filename: filename, contentType: MediaType("image", "png")),
+      "accountNumber": accountNumber,
+    });
+
+    try {
+      var res = await dio.post(uri,
+          data: formData,
+          options: Options(sendTimeout: 60000, method: "POST", headers: {
+            "Accept": "*/*",
+            "Content-Type": "multipart/form-data",
+          }));
+
+      if (200 == res.statusCode) {
+        print(res.data);
+
+        Fluttertoast.showToast(
+          msg: isProfile ? "Profile Uploaded" : "Signature Uploaded",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

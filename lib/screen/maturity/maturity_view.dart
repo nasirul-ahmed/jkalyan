@@ -188,26 +188,11 @@ class _MaturityViewState extends State<MaturityView> {
                               shrinkWrap: true,
                               itemCount: snap.data?.length,
                               itemBuilder: (__, id) {
-                                Uint8List? profile = Base64Decoder()
-                                    .convert(snap.data?[id].profile ?? '');
                                 return ListTile(
                                   hoverColor: Colors.grey[300],
-                                  leading: snap.data?[id].profile == null
-                                      ? CircleAvatar(
-                                          child: Icon(Icons.person),
-                                        )
-                                      : Container(
-                                          width: 40,
-                                          height: 40,
-                                          //child: Image.memory(profile),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: MemoryImage(profile),
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ),
+                                  leading: CircleAvatar(
+                                    child: Icon(Icons.person),
+                                  ),
                                   onTap: () {
                                     //if (widget.isMaturity) {
                                     Navigator.push(

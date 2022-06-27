@@ -20,16 +20,16 @@ Future<Customer> createCustomer(
   String relation,
   String nomineeFatherName,
   String createdAt,
-  //int rateOfInterest,
+  int rateOfInterest,
   int totalInstallments,
   int installmentAmount,
   int totalPrincipalAmount,
-  // double totalInterestAmount,
+  double totalInterestAmount,
   double totalMaturityAmount,
   String maturityDate,
   String accountType,
   int nomineeAge,
-  //int depositAmount,
+  int depositAmount,
 ) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
   String uri = '$janaklyan/api/collector/customer/create';
@@ -56,13 +56,16 @@ Future<Customer> createCustomer(
       'nomineeFatherName': nomineeFatherName,
       'nomineeAge': nomineeAge,
       'createdAt': createdAt,
+      "rateOfInterest":rateOfInterest,
       'totalInstallments': totalInstallments,
       'installmentAmount': installmentAmount,
       'totalPrincipalAmount': totalPrincipalAmount,
+      'totalInterestAmount': totalInterestAmount,
       'totalMaturityAmount': totalMaturityAmount,
       'maturityDate': maturityDate,
       'agentUid': _prefs.getInt("collectorId"),
       "accountType": accountType,
+      "depositAmount":depositAmount,
     }),
   );
 

@@ -41,7 +41,7 @@ class _AccountRegisterViewState extends State<AccountRegisterView> {
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: TextField(
               controller: _searchAc,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 suffixIcon:
                     //query.text.trim().isNotEmpty?
@@ -94,7 +94,7 @@ class _AccountRegisterViewState extends State<AccountRegisterView> {
           },
           body: body);
       if (200 == res.statusCode) {
-        print(res.body.toString());
+       
         var parsed = jsonDecode(res.body).cast<Map<String, dynamic>>();
 
         return parsed.map<Customer>((json) => Customer.fromJson(json)).toList();

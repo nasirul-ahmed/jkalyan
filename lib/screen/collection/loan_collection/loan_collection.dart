@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 import 'package:devbynasirulahmed/screen/passbook/loan_passbook/loan_passbook.dart';
 import 'package:devbynasirulahmed/screen/repayment_history/repayment_history.dart';
+import 'package:devbynasirulahmed/services/date.format.dart';
 import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -45,8 +46,9 @@ class LoanCollection extends StatelessWidget {
                       details("Name", doc!.custName),
                       details("Loan Account", doc!.loanAcNo),
                       details("Loan Amount", doc?.loanAmount),
-                      details("Created At", doc!.createdAt?.split('T').first),
-                      details("Last update", doc!.updatedAt?.split('T').first),
+                      details("Created At", formatDate(doc!.createdAt)),
+                      details("Last update", formatDate(doc!.updatedAt)),
+                      details("Next repaymnt date", formatDate(DateTime.parse(doc!.updatedAt!).add(Duration(days: 30)))),
                       details("Interest Rate", doc!.interestRate),
                       //Todo:
                       details("Remaining Interest", doc!.loanInterest),
@@ -105,7 +107,7 @@ class LoanCollection extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 10),
                   child: Container(
-                    height: 50,
+                    height: 40,
                     decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(30.0)),
@@ -126,68 +128,65 @@ class LoanCollection extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Material(
-                    child: Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          // color: Colors.green,
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          print("object");
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => LoanPassbook(doc)));
-                        },
-                        highlightColor: Colors.brown,
-                        hoverColor: Colors.amber,
-                        splashColor: Colors.amber,
-                        child: Center(
-                          child: Text(
-                            "Passbook",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
+                Material(
+                  child: Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        // color: Colors.green,
+                        borderRadius: BorderRadius.circular(30.0)),
+                    child: InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        print("object");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => LoanPassbook(doc)));
+                      },
+                      highlightColor: Colors.brown,
+                      hoverColor: Colors.amber,
+                      splashColor: Colors.amber,
+                      child: Center(
+                        child: Text(
+                          "Passbook",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Material(
-                    child: Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          // color: Colors.green,
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    RepaymentHistory(loanAcNo: doc!.loanAcNo, name: doc!.custName)),
-                          );
-                        },
-                        highlightColor: Colors.brown,
-                        hoverColor: Colors.amber,
-                        splashColor: Colors.amber,
-                        child: Center(
-                          child: Text(
-                            "Repayment History",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
+                Material(
+                  child: Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        // color: Colors.green,
+                        borderRadius: BorderRadius.circular(30.0)),
+                    child: InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => RepaymentHistory(
+                                  loanAcNo: doc!.loanAcNo,
+                                  name: doc!.custName,
+                                  loanAmount: doc!.loanAmount,
+                                  nextDue: doc!.updatedAt,
+                                  depositAcNo: doc!.depositAcNo,
+                                  )),
+                        );
+                      },
+                      highlightColor: Colors.brown,
+                      hoverColor: Colors.amber,
+                      splashColor: Colors.amber,
+                      child: Center(
+                        child: Text(
+                          "Repayment History",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),

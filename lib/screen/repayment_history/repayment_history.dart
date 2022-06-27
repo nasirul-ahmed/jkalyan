@@ -7,7 +7,19 @@ import 'package:flutter/material.dart';
 class RepaymentHistory extends StatelessWidget {
   final loanAcNo;
   final name;
-  RepaymentHistory({Key? key, required this.loanAcNo, required this.name}) : super(key: key);
+  final loanAmount;
+  final nextDue;
+  final depositAcNo;
+  RepaymentHistory(
+      {Key? key,
+      required this.loanAcNo,
+      required this.name,
+      required this.loanAmount,
+      required this.nextDue,
+      required this.depositAcNo,
+      
+      })
+      : super(key: key);
 
   LoanRepaymentServices loanRepaymentServices = LoanRepaymentServices();
 
@@ -22,25 +34,8 @@ class RepaymentHistory extends StatelessWidget {
         future: loanRepaymentServices.getLoanRepayments(loanAcNo),
         builder: (____, snap) {
           if (snap.hasData) {
-            return renderDatatable(context, snap.data, name);
-            // ListView.builder(
-            //     itemCount: snap.data!.length,
-            //     itemBuilder: (_______, id) {
-
-            // return  ListTile(
-            //     title: Text(
-            //         "Interst: ${snap.data![id].interestPaid} / Rep.Amnt: ${snap.data![id].interestPaid}"),
-            //     subtitle: Text("Date: ${snap.data![id].createdAt}"),
-            //     trailing: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       children: [
-            //         Text("Total Paid: ${snap.data![id].totalPaidAmount}"),
-            //         Text("Due Date: ${snap.data![id].totalPaidAmount}"),
-            //       ],
-            //     ),
-            //   );
-            // });
+            return renderDatatable(context, snap.data, name, loanAmount, nextDue, depositAcNo);
+            
           } else if (snap.hasError) {
             return Center(child: Text("Something Error"));
           } else {
@@ -52,11 +47,17 @@ class RepaymentHistory extends StatelessWidget {
   }
 }
 
-SingleChildScrollView renderDatatable(
-    BuildContext context, List<LoanRepayment>? list, String name) {
+SingleChildScrollView renderDatatable(BuildContext context,
+    List<LoanRepayment>? list, String name, int loanAmount, String nextDue, int depositAcNo) {
   void navigate(context, document) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (_) => RepaymentRepie(doc: document, name: name)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => RepaymentRepie(
+                doc: document,
+                name: name,
+                loanAmount: loanAmount,
+                nextDue: nextDue, depositAcNo: depositAcNo,)));
   }
 
   TextStyle style = TextStyle(color: Colors.black, fontSize: 12);

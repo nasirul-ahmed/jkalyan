@@ -1,6 +1,12 @@
+import 'dart:io';
+import 'package:open_file/open_file.dart';
+import 'package:devbynasirulahmed/services/date.format.dart';
 import 'package:devbynasirulahmed/services/format_date.dart';
 import 'package:flutter/material.dart';
 import 'package:devbynasirulahmed/models/maturity_model.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+import "package:pdf/pdf.dart";
 
 class DetailsMaturity extends StatefulWidget {
   DetailsMaturity({Key? key, this.doc}) : super(key: key);
@@ -34,6 +40,12 @@ class _DetailsMaturityState extends State<DetailsMaturity> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Details'),
+          actions: [
+            ElevatedButton(
+              onPressed: handleClick,
+              child: Text("Download"),
+            ),
+          ],
         ),
         body: ListView(
           shrinkWrap: true,
@@ -167,8 +179,222 @@ class _DetailsMaturityState extends State<DetailsMaturity> {
             customContainer("Net Payable Amount",
                 "Rs.  " + widget.doc!.totalAmount.toString() + "  /-"),
             SizedBox(height: 50),
+            ElevatedButton(onPressed: handleClick, child: Text("Download Pdf")),
           ],
         ));
+  }
+
+  handleClick() async {
+    const style = pw.TextStyle(color: PdfColors.red, fontSize: 22);
+
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Column(
+            children: [
+              // pw.Center(
+              //   child: pw.Text("Header"),
+              // ),
+              pw.Partition(
+                child: pw.Column(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text(
+                        "JANAKALYAN AGRICULTURE & RURAL DEV. SOCIETY",
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.red,
+                        ),
+                      ),
+                      pw.SizedBox(height: 5),
+                      pw.Text(
+                        "Bechimari :: Darrang (Assam)",
+                        style: pw.TextStyle(
+                            fontSize: 12, fontWeight: pw.FontWeight.bold),
+                      ),
+                      pw.SizedBox(height: 5),
+                      pw.Text(
+                        "P.O: Bechimari, PIN - 784514 ",
+                        style: pw.TextStyle(
+                            fontSize: 12, fontWeight: pw.FontWeight.bold),
+                      ),
+                      pw.SizedBox(height: 5),
+                      pw.Text(
+                        "Regd No :: RS/DAR/247/G/20 - 2008",
+                        style: pw.TextStyle(
+                            fontSize: 12, fontWeight: pw.FontWeight.bold),
+                      )
+                    ]),
+              ),
+              pw.Divider(),
+
+              pw.Container(
+                //width: MediaQuery.of(pw.Context context).size.width,
+                height: 40,
+                color: PdfColors.blue,
+                child: pw.Center(
+                  child: pw.Text(
+                    widget.doc!.isPreMaturity! == 0
+                        ? "Maturity"
+                        : "Pre Maturity",
+                    style: pw.TextStyle(
+                        color: PdfColors.white,
+                        fontSize: 12,
+                        fontWeight: pw.FontWeight.bold),
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 15),
+              pw.Partition(
+                child: pw.Column(children: [
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Customer Name"),
+                      pw.Text(widget.doc!.custName.toString()),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Father Name"),
+                      pw.Text(widget.doc!.fathersName.toString()),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Address"),
+                      pw.Text(widget.doc!.address.toString()),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Account Number"),
+                      pw.Text(widget.doc!.accountNumber.toString()),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Collector Code"),
+                      pw.Text(widget.doc!.collectorId.toString()),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("A/c Opening Date"),
+                      pw.Text(formatDate(widget.doc!.openingDate)),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Submission Date"),
+                      pw.Text(formatDate(widget.doc!.submitDate)),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Processing Date"),
+                      pw.Text(formatDate(widget.doc!.processDate)),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Maturity Value (Rs)"),
+                      pw.Text(widget.doc!.maturityValue.toString()),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Maturity / Deposit Amount (Rs)"),
+                      pw.Text(widget.doc!.maturityAmount.toString()),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  widget.doc!.isPreMaturity! == 0
+                      ? pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text("Maturity Intrest Amount (Rs)"),
+                            pw.Text("+  " +
+                                widget.doc!.maturityInterest.toString()),
+                          ],
+                        )
+                      : pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text("Pre Maturity Charge (Rs)"),
+                            pw.Text("-  " +
+                                widget.doc!.preMaturityCharge.toString()),
+                          ],
+                        ),
+                  pw.SizedBox(height: 5),
+                  pw.Divider(),
+                  pw.SizedBox(height: 5),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("Net Payable Amount (Rs)"),
+                      pw.Text(
+                          "=  " + widget.doc!.totalAmount.toString() + " /-"),
+                    ],
+                  ),
+                  pw.Divider(),
+                  pw.SizedBox(
+                    height: 20,
+                  ),
+                  pw.Text(
+                      "I've recieved the amount as mentioned above in full as per Samittees Scheme deposited by me and I've no claim against the Society and to the Account."),
+                  pw.SizedBox(
+                    height: 40,
+                  ),
+                  pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text("Collector (signature)"),
+                        pw.Text("Account Holder (Signature/Thumb)")
+                      ]),
+                  pw.Divider(),
+                  pw.Text("*Remarks",
+                      style: const pw.TextStyle(
+                        decoration: pw.TextDecoration.underline,
+                      ))
+                ]),
+              ),
+            ],
+          ); // Center
+        },
+      ),
+    );
+
+    final path = (await getExternalStorageDirectory())!.path;
+    final filename = "maturity_statement(ac-${widget.doc!.accountNumber}).pdf";
+
+    final file = File("$path/$filename");
+    //Uint8List pdfInBytes = await pdf.save();
+
+    await file.writeAsBytes(await pdf.save(), flush: true);
+    OpenFile.open('$path/$filename');
   }
 
   Widget customContainer(String hint, dynamic hintValue) {

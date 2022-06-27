@@ -11,7 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:http_parser/http_parser.dart';
 
 class UploadDocs extends StatefulWidget {
-  const UploadDocs({Key? key, required this.accountNumber}) : super(key: key);
+  const UploadDocs({Key? key, this.accountNumber}) : super(key: key);
 
   final int? accountNumber;
 
@@ -112,7 +112,15 @@ class _UploadDocsState extends State<UploadDocs> {
                         width: screen.width * 0.5,
                         color: Colors.green,
                         child: InkWell(
-                          onTap: () => uploadPhoto(context),
+                          onTap: () {
+                            if (_image!.existsSync()) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (__) => UploadDocs2(file1: _image,)));
+                            }
+                            // uploadPhoto(context, widget.accountNumber!),
+                          },
                           child: Center(
                             child: Text(
                               "Upload",
@@ -131,7 +139,7 @@ class _UploadDocsState extends State<UploadDocs> {
         ));
   }
 
-  uploadPhoto(BuildContext context) async {
+  uploadPhoto(BuildContext context, int accountNumber) async {
     upLoadingDialog(context);
     Dio dio = Dio();
     String uri = '$janaklyan/api/collector/uploads-profile';
@@ -162,11 +170,12 @@ class _UploadDocsState extends State<UploadDocs> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        Navigator.pop(context);
+        // Navigator.pop(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => AccountRegisterView(),
+            builder: (_) =>
+                UploadDocs2(accountNumber: accountNumber, file1: _image),
           ),
         );
       }

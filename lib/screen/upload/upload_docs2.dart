@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:devbynasirulahmed/constants/api_url.dart';
 import 'package:devbynasirulahmed/screen/account_register/account_register_view.dart';
+import 'package:devbynasirulahmed/screen/add_customer/addDepositCustomer.dart';
+import 'package:devbynasirulahmed/screen/add_customer/add_cust_mobile_view.dart';
+import 'package:devbynasirulahmed/screen/homepage/dashboard.dart';
 
 import 'package:devbynasirulahmed/widgets/success_dialog.dart';
 import 'package:dio/dio.dart';
@@ -11,8 +14,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:http_parser/http_parser.dart';
 
 class UploadDocs2 extends StatefulWidget {
-  const UploadDocs2({Key? key, this.accountNumber}) : super(key: key);
+  const UploadDocs2({Key? key, this.file1, this.accountNumber})
+      : super(key: key);
   final int? accountNumber;
+  final File? file1;
   @override
   _UploadDocs2State createState() => _UploadDocs2State();
 }
@@ -91,7 +96,7 @@ class _UploadDocs2State extends State<UploadDocs2> {
                     child: Text(
                     'Select an image to upload',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 18,
                     ),
                   ))
@@ -111,7 +116,23 @@ class _UploadDocs2State extends State<UploadDocs2> {
                         width: screen.width * 0.5,
                         color: Colors.green,
                         child: InkWell(
-                          onTap: () => uploadPhoto(context),
+                          onTap: () async {
+                            if (widget.file1!.existsSync() &&
+                                _image!.existsSync()) {
+                              // var r = await
+                              // uploadPhoto(context);
+                              // uploadPhoto2(context);
+
+                              // Navigator.pushAndRemoveUntil(context, newRoute, )
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (__) => AddCustomerMV(
+                                        file1: widget.file1, file2: _image),
+                                  ),
+                                  (route) => false);
+                            }
+                          },
                           child: Center(
                             child: Text(
                               "Upload",
@@ -160,10 +181,46 @@ class _UploadDocs2State extends State<UploadDocs2> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
-        Navigator.pop(context);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (__) => AccountRegisterView()));
+  uploadPhoto2(BuildContext context) async {
+    upLoadingDialog(context);
+    Dio dio = Dio();
+    String uri = '$janaklyan/api/collector/uploads-profile';
+    String filename = _image!.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(_image!.path,
+          filename: filename, contentType: MediaType("image", "png")),
+      "accountNumber": widget.accountNumber,
+    });
+
+    try {
+      var res = await dio.post(uri,
+          data: formData,
+          options: Options(sendTimeout: 60000, method: "POST", headers: {
+            "Accept": "*/*",
+            "Content-Type": "multipart/form-data",
+          }));
+
+      if (200 == res.statusCode) {
+        print(res.data);
+
+        Fluttertoast.showToast(
+          msg: "Profile Uploaded",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        // Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (_) => DashBoard()), (route) => false);
       }
     } catch (e) {
       print(e);
